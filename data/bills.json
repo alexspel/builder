@@ -1,26 +1,34 @@
 [
     {
         "id": 1,
-        "projectId": 1,
+        "project": { "id": 1, "name": "Дача", "status": "В работе" },
         "positions": [
             {
                 "id": 1,
-                "goodId": 1,
+                "good": {
+                    "id": 1,
+                    "name": "Проволова тонкая",
+                    "measure": "Метров"
+                },
                 "value": 10,
                 "date": "2022-03-03",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "В работе",
                 "deliveryPlan": "2022-03-03",
                 "deliveryFact": null
             },
             {
                 "id": 2,
-                "goodId": 2,
+                "good": {
+                    "id": 2,
+                    "name": "Проволова толстая",
+                    "measure": "Метров"
+                },
                 "value": 10,
                 "date": "2022-02-02",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-02-02",
                 "deliveryFact": "2022-02-02"
@@ -29,125 +37,125 @@
     },
     {
         "id": 2,
-        "projectId": 1,
+        "project": { "id": 1, "name": "Дача", "status": "В работе" },
         "positions": [
             {
                 "id": 3,
-                "goodId": 3,
+                "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
                 "value": 20,
                 "date": "2022-01-01",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-01-01",
                 "deliveryFact": "2022-01-01"
             },
             {
                 "id": 4,
-                "goodId": 3,
+                "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
                 "value": 30,
                 "date": "2022-01-01",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-02-02",
                 "deliveryFact": "2022-01-01"
             },
             {
                 "id": 5,
-                "goodId": 3,
+                "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
                 "value": 40,
                 "date": "2022-01-01",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-03-03",
                 "deliveryFact": "2022-01-01"
             },
             {
                 "id": 6,
-                "goodId": 3,
+                "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
                 "value": 40,
                 "date": "2022-01-01",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-03-03",
                 "deliveryFact": "2022-01-01"
             },
             {
                 "id": 7,
-                "goodId": 3,
+                "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
                 "value": 40,
                 "date": "2022-01-01",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-03-03",
                 "deliveryFact": "2022-01-01"
             },
             {
                 "id": 8,
-                "goodId": 3,
+                "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
                 "value": 40,
                 "date": "2022-01-01",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-03-03",
                 "deliveryFact": "2022-01-01"
             },
             {
                 "id": 9,
-                "goodId": 3,
+                "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
                 "value": 40,
                 "date": "2022-01-01",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-03-03",
                 "deliveryFact": "2022-01-01"
             },
             {
                 "id": 10,
-                "goodId": 3,
+                "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
                 "value": 40,
                 "date": "2022-01-01",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-03-03",
                 "deliveryFact": "2022-01-01"
             },
             {
                 "id": 11,
-                "goodId": 3,
+                "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
                 "value": 40,
                 "date": "2022-01-01",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-03-03",
                 "deliveryFact": "2022-01-01"
             },
             {
                 "id": 12,
-                "goodId": 3,
+                "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
                 "value": 40,
                 "date": "2022-01-01",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-03-03",
                 "deliveryFact": "2022-01-01"
             },
             {
                 "id": 13,
-                "goodId": 3,
+                "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
                 "value": 40,
                 "date": "2022-01-01",
                 "comment": "",
-                "managerId": 1,
+                "manager": { "id": 1, "name": "Иванов И.И." },
                 "status": "Доставлено",
                 "deliveryPlan": "2022-03-03",
                 "deliveryFact": "2022-01-01"
