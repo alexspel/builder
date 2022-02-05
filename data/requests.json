@@ -1,69 +1,69 @@
 [
-   {
-      "id":1,
-      "projectId":1,
-      "positions":[
-         {
-            "id":1,
-            "goodId":1,
-            "value":10,
-            "date":"2022-03-03",
-            "comment":"",
-            "managerId":1,
-            "status":"В работе",
-            "deliveryPlan":"2022-03-03",
-            "deliveryFact":null
-         },
-         {
-            "id":2,
-            "goodId":3,
-            "value":10,
-            "date":"2022-02-02",
-            "comment":"",
-            "managerId":1,
-            "status":"Доставлено",
-            "deliveryPlan":"2022-02-02",
-            "deliveryFact":"2022-02-02"
-         }
-      ]
-   },
-   {
-      "id":2,
-      "projectId": 2,
-      "positions":[
-         {
-            "id":3,
-            "goodId":1,
-            "value":20,
-            "date":"2022-01-01",
-            "comment":"",
-            "managerId":1,
-            "status":"Доставлено",
-            "deliveryPlan":"2022-01-01",
-            "deliveryFact":"2022-01-01"
-         },
-         {
-            "id":4,
-            "goodId":2,
-            "value":30,
-            "date":"2022-01-01",
-            "comment":"",
-            "managerId":1,
-            "status":"Доставлено",
-            "deliveryPlan":"2022-02-02",
-            "deliveryFact":"2022-01-01"
-         },
-         {
-            "id":5,
-            "goodId":3,
-            "value":30,
-            "date":"2022-01-01",
-            "comment":"",
-            "managerId":1,
-            "status":"Доставлено",
-            "deliveryPlan":"2022-02-02",
-            "deliveryFact":"2022-01-01"
-         }
-      ]
-   }
+    {
+        "id": 1,
+        "project": { "id": 1, "name": "Дача" },
+        "positions": [
+            {
+                "id": 1,
+                "good": { "id": 1, "name": "Проволока тонкая" },
+                "value": 10,
+                "date": "2022-03-03",
+                "comment": "",
+                "managerId": 1,
+                "status": "В работе",
+                "deliveryPlan": "2022-03-03",
+                "deliveryFact": null
+            },
+            {
+                "id": 2,
+                "good": { "id": 2, "name": "Проволока толстая" },
+                "value": 10,
+                "date": "2022-02-02",
+                "comment": "",
+                "managerId": 1,
+                "status": "Доставлено",
+                "deliveryPlan": "2022-02-02",
+                "deliveryFact": "2022-02-02"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "project": { "id": 2, "name": "ЖК Сельдерей" },
+        "positions": [
+            {
+                "id": 3,
+                "good": { "id": 1, "name": "Проволока тонкая" },
+                "value": 20,
+                "date": "2022-01-01",
+                "comment": "",
+                "managerId": 1,
+                "status": "Доставлено",
+                "deliveryPlan": "2022-01-01",
+                "deliveryFact": "2022-01-01"
+            },
+            {
+                "id": 4,
+                "good": { "id": 2, "name": "Проволока толстая" },
+                "value": 30,
+                "date": "2022-01-01",
+                "comment": "",
+                "managerId": 1,
+                "status": "Доставлено",
+                "deliveryPlan": "2022-02-02",
+                "deliveryFact": "2022-01-01"
+            },
+            {
+                "id": 5,
+                "good": { "id": 3, "name": "Фанера 5мм" },
+                "value": 30,
+                "date": "2022-01-01",
+                "comment": "",
+                "managerId": 1,
+                "status": "Доставлено",
+                "deliveryPlan": "2022-02-02",
+                "deliveryFact": "2022-01-01"
+            }
+        ]
+    }
 ]
