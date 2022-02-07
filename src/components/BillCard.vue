@@ -28,7 +28,7 @@ export default {
     }),
     async created() {
         var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/main/data/bill.json"
+            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/bill.json"
         );
         this.bill = await response.json();
     },
