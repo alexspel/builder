@@ -20,6 +20,13 @@
             to="/request/agreement"
         >
             <v-btn color="default">Согласование заявок</v-btn>
-        </router-link> 
+        </router-link>
+        <router-link
+            style="text-decoration: none; color: inherit"
+            class="mr-4"
+            to="/bill"
+        >
+            <v-btn color="default">Карточка счета</v-btn>
+        </router-link>
     </v-container>
 </template>

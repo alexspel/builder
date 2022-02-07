@@ -5,11 +5,14 @@
             <h3 class="mb-4 font-weight-regular">
                 Проект: {{ request.project.name }}
             </h3>
+            <v-text-field
+                name="requestName"
+                label="Название заявки"
+                v-model="request.name"
+            />
             <v-select
                 :items="statuses"
                 v-model="request.status"
-                :readonly="request.id === null"
-                :disabled="request.id === null"
                 label="Статус заявки"
             />
             <Position class="my-4" @position-add="addPosition" />
@@ -65,6 +68,7 @@ export default {
         statuses: [],
         request: {
             id: null,
+            name: null,
             project: {
                 id: 1,
                 name: "Дача",
@@ -110,7 +114,7 @@ export default {
     }),
     async created() {
         var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/main/data/statuses.json"
+            "https://raw.githubusercontent.com/alexspel/builder/main/data/request_statuses.json"
         );
         var data = await response.json();
         this.statuses = data;

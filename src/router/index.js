@@ -8,6 +8,7 @@ import ProjectBillList from "../components/ProjectBillList";
 import Request from "../components/Request";
 import RequestsAgreement from "../components/RequestsAgreement";
 import BillAgreement from "../components/BillAgreement";
+import BillCard from "../components/BillCard";
 
 Vue.use(VueRouter);
 
@@ -52,6 +53,11 @@ const routes = [
         name: "bill/agreement",
         component: BillAgreement,
     },
+    {
+        path: "/bill",
+        name: "bill",
+        component: BillCard,
+    }
 ];
 
 const router = new VueRouter({

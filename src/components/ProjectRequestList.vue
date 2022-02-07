@@ -5,6 +5,7 @@
         <div class="mb-4">Статус проекта: {{ project.status }}</div>
         <div v-for="(request, index) in project.requests" :key="request">
             <div class="text-h4 mb-2">Заявка №{{ index + 1 }}</div>
+            <div class="text-h4 mb-2">{{ request.name }}</div>
             <v-data-table :headers="positionHeaders" :items="request.positions">
                 <template #item.index="{ item }">
                     {{ request.positions.indexOf(item) + 1 }}
