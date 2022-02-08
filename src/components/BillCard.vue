@@ -33,7 +33,7 @@
                 <v-data-table
                     :headers="requestPositionsHeaders"
                     dense
-                    :items="bill.positions"
+                    :items="requestPositions"
                     class="elevation-1 row-pointer"
                     show-select
                     :search="search"
@@ -42,7 +42,7 @@
                     v-model="selectedPositions"
                 >
                     <template #item.index="{ item }">
-                        <td>{{ bill.positions.indexOf(item) + 1 }}</td>
+                        <td>{{ requestPositions.indexOf(item) + 1 }}</td>
                     </template>
                     <template v-slot:item.delivered="{ item }">
                         <v-icon>{{
@@ -304,16 +304,18 @@
 <script>
 export default {
     data: () => ({
+        bill: null,
         billLoaded: false,
         search: "",
-        project: null,
-        manager: null,
+        project: { id: null, name: null },
+        manager: { id: null, name: null },
         billPositions: [],
         selectedPositions: [],
         dialogEditDateMenuShow: false,
         dialogEdit: false,
         dialogDelete: false,
         editedIndex: -1,
+        requestPositions: [],
         defaultBillPosition: {
             position: {
                 good: {
@@ -474,19 +476,20 @@ export default {
             "https://raw.githubusercontent.com/alexspel/builder/billcard/data/bill.json"
         );
         this.bill = await response.json();
-
+        this.requestPositions = this.bill.positions;
+        console.log(this.bill);
         response = await fetch(
             "https://raw.githubusercontent.com/alexspel/builder/dev/data/projects.json"
         );
         var projects = await response.json();
-        this.project = projects.find((p) => p.id == this.bill.id);
-
+        this.project = projects.find((p) => p.id == +this.bill.id);
+        console.log(this.project);
         response = await fetch(
             "https://raw.githubusercontent.com/alexspel/builder/dev/data/users/users.json"
         );
         var users = await response.json();
-        this.manager = users.find((p) => p.id == this.project.authorId);
-
+        this.manager = users.find((p) => p.id == +this.project.author.id);
+        console.log(this.manager);
         this.billLoaded = true;
     },
 };
