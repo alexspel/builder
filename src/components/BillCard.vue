@@ -82,7 +82,7 @@
                     item-key="id"
                 >
                     <template v-slot:top>
-                        <v-dialog v-model="dialogEdit">
+                        <v-dialog v-model="dialogEdit" max-width="50%">
                             <v-card>
                                 <v-card-title>
                                     <span class="text-h5">Редактирование</span>
@@ -371,7 +371,7 @@ export default {
             { text: "Количество (счет)", value: "value" },
             { text: "Дата поставки (счет)", value: "date" },
             { text: "Цена (счет)", value: "price" },
-            { text: "Actions", value: "actions", sortable: false },
+            { text: "Действия", value: "actions", sortable: false },
         ],
     }),
     methods: {
@@ -454,7 +454,7 @@ export default {
         editFormLabelValue() {
             if (this.editedBillPosition && this.editedBillPosition.position) {
                 return (
-                    "Количество, " +
+                    "Требуемое количество, " +
                     this.editedBillPosition.position.good.measure
                 );
             }

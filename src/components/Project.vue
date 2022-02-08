@@ -1,7 +1,9 @@
 <template>
-    <div>
-        <h2 class="text-h2 mb-4">Создание проекта</h2>
-        <v-form>
+    <v-card class="pa-2" outlined>
+        <v-card-title>
+            <h2 class="text-h2 mb-4">Создание проекта</h2>
+        </v-card-title>
+        <v-card-text>
             <v-text-field label="Название проект" v-model="project.name" />
             <v-select
                 label="Статус проекта"
@@ -17,6 +19,8 @@
                 readonly
                 disabled
             />
+        </v-card-text>
+        <v-card-actions>
             <v-btn v-if="project.id === null" color="primary"> Создать </v-btn>
             <v-btn v-if="project.id !== null" color="primary" class="mr-4">
                 Сохранить
@@ -24,8 +28,8 @@
             <v-btn v-if="project.id !== null" color="error" class="mr-4"
                 >Удалить</v-btn
             >
-        </v-form>
-    </div>
+        </v-card-actions>
+    </v-card>
 </template>
 
 <script>
@@ -48,7 +52,7 @@ export default {
             "https://raw.githubusercontent.com/alexspel/builder/main/data/project_statuses.json"
         );
         var data = await response.json();
-        this.statuses = data;        
+        this.statuses = data;
     },
 };
-</script> 
+</script>

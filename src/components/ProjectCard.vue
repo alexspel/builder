@@ -1,57 +1,106 @@
 <template>
     <div>
-        <v-card>
-            <v-card-text>
-                <h2 class="text-h2 mb-4">
-                    Карточка проекта {{ project.name }}
-                </h2>
-                <p v-if="project.comment">Комментарий: {{ project.comment }}</p>
-                <p>Статус: {{ project.status }}</p>
-                <p>Информация о контрагенте: {{ project.partner.name }}</p>
-                <ul>
-                    <li
-                        v-for="contact in project.partner.contacts"
-                        :key="contact.id"
-                    >
-                        {{ contact.name }} {{ contact.email || contact.phone }}
-                    </li>
-                </ul>
-                <div v-if="project.documents">
-                    <div>Документы проекта:</div>
-                    <ul>
-                        <li
-                            v-for="document in project.documents"
-                            :key="document.id"
+        <v-card class="pa-5">
+            <v-row>
+                <v-col>
+                    <v-card-text>
+                        <h2 class="text-h2 mb-4">
+                            Карточка проекта {{ project.name }}
+                        </h2>
+                    </v-card-text>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col>
+                    <v-card-text>
+                        <div class="text-h5 mb-3">
+                            <span class="font-weight-medium"
+                                >Статус проекта:</span
+                            >
+                            {{ project.status }}
+                        </div>
+                        <div class="text-h5 mb-3" v-if="project.comment">
+                            <span class="font-weight-medium">Комментарий:</span>
+                            {{ project.comment }}
+                        </div>
+                        <div class="text-h5 mb-3">
+                            <span class="font-weight-medium"> Адрес: </span>
+                            {{ project.address }}
+                        </div>
+                        <div class="text-h5">
+                            <span class="font-weight-medium">
+                                Информация о контрагенте:
+                            </span>
+                            {{ project.partner.name }}
+                        </div>
+                        <v-list>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title
+                                        v-for="contact in project.partner
+                                            .contacts"
+                                        :key="contact.id"
+                                        class="text-h5 mb-3"
+                                    >
+                                        {{ contact.name }}
+                                        {{ contact.email || contact.phone }}
+                                    </v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                        <div v-if="project.documents">
+                            <span class="text-h5 font-weight-medium">
+                                Документы проекта:
+                            </span>
+                            <v-list>
+                                <v-list-item>
+                                    <v-list-item-content>
+                                        <v-list-item-title
+                                            v-for="document in project.documents"
+                                            :key="document.id"
+                                            class="text-h5 mb-3"
+                                        >
+                                            <a :href="document.link">{{
+                                                document.name
+                                            }}</a>
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list>
+                        </div>
+                    </v-card-text>
+                </v-col>
+                <v-col>
+                    <div class="text-h5 font-weight-medium">
+                        Фотографии объекта
+                    </div>
+                    <v-carousel v-model="slide">
+                        <v-carousel-item
+                            v-for="(color, i) in colors"
+                            :key="color"
                         >
-                            <a :href="document.link">{{ document.name }}</a>
-                        </li>
-                    </ul>
-                </div>
-                <div>Адрес: {{ project.address }}</div>
-            </v-card-text>
+                            <v-sheet :color="color" height="100%" tile>
+                                <v-row
+                                    class="fill-height"
+                                    align="center"
+                                    justify="center"
+                                >
+                                    <div class="text-h2">Photo {{ i + 1 }}</div>
+                                </v-row>
+                            </v-sheet>
+                        </v-carousel-item>
+                    </v-carousel>
+                </v-col>
+            </v-row>
         </v-card>
     </div>
 </template>
 
 <script>
 export default {
-    data: () => ({
-        // project: {
-        //     name: "Дача",
-        //     author: "Иванов И.И.",
-        //     comment: null,
-        //     status: "В работе",
-        //     address: "ул. Ленина, дом 12",
-        //     documents: [{ name: "Договор", link: "/project" }],
-        //     partnerId: {
-        //         name: "ООО Вкусные ватрушки",
-
-        //     },
-        //     contacts: [
-        //         { id: 1, name: "Исильдур А.В.", email: "ivv@example.ru" },
-        //         { id: 2, name: "Леголасов Э.П.", phone: "8-999-987-65-43" },
-        //     ],
-        // },
+    data: () => ({ 
+        slide: 0,
+        colors: ["primary", "secondary", "yellow darken-2", "red", "orange"],
         project: {
             name: null,
             author: null,
@@ -67,15 +116,11 @@ export default {
         },
     }),
     async created() {
-        // var response = await fetch(
-        //     "https://raw.githubusercontent.com/alexspel/builder/dev/data/projects.json"
-        // );
-        // var p = await response.json();
-        // console.log(p);
-        // if (p.find((p) => p.id === +this.$route.params.id)) {
-        //     this.project = p.find((p) => p.id === +this.$route.params.id);
-        // }
-        console.log(123);
+        var response = await fetch(
+            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"
+        );
+        var p = await response.json();  
+        this.project = p.find((p) => p.id === +this.$route.params.id);
     },
 };
 </script>
