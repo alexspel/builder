@@ -50,7 +50,7 @@ export default {
     }),
     async created() {
         var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/main/data/projects.json"
+            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"
         );
         var data = await response.json();
         this.projects = data;

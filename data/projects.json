@@ -1,23 +1,53 @@
 [
-   {
-      "id":1,
-      "name":"Дача",
-      "comment":"Дача генерала",
-      "status":"В работе",
-      "authorId":1
-   },
-   {
-      "id":2,
-      "name":"ЖК Сады и огороды",
-      "comment":"ЖК Сады и огороды",
-      "status":"Новый",
-      "authorId":1
-   },
-   {
-      "id":3,
-      "name":"ЖК Цветочная поляна",
-      "comment":"ЖК Цветочная поляна",
-      "status":"В работе",
-      "authorId":2
-   }
+    {
+        "id": 1,
+        "name": "Дача",
+        "comment": "Дача генерала",
+        "status": "В работе",
+        "address": "ул. Ленина, дом 12",
+        "author": {
+            "name": "Иванов И.И."
+        },
+        "documents": [{ "name": "Договор", "link": "/project" }],
+        "partner": {
+            "name": "Арматура inc",
+            "contacts": [
+                { "id": 1, "name": "Петров П.П", "email": "petrovv@example.ru" }
+            ]
+        }
+    },
+    {
+        "id": 2,
+        "name": "ЖК Сады и огороды",
+        "comment": "ЖК Сады и огороды",
+        "status": "Новый",
+        "address": "ул. Ленина, дом 13",
+        "author": {
+            "name": "Иванов И.И."
+        },
+        "documents": [
+            { "name": "Договор", "link": "/project" },
+            { "name": "Смета", "link": "/project" }
+        ],
+        "partner": {
+            "name": "ООО Вкусные ватрушки",
+            "contacts": [
+                { "id": 1, "name": "Исильдур А.В.", "email": "ivv@example.ru" },
+                {
+                    "id": 2,
+                    "name": "Леголасов Э.П.",
+                    "phone": "8-999-987-65-43"
+                }
+            ]
+        }
+    },
+    {
+        "id": 3,
+        "name": "ЖК Цветочная поляна",
+        "comment": "ЖК Цветочная поляна",
+        "status": "В работе",
+        "author": {
+            "name": "Петров П.П."
+        }
+    }
 ]

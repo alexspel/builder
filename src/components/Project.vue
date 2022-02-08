@@ -51,6 +51,4 @@ export default {
         this.statuses = data;        
     },
 };
-</script>
-
-<style lang="scss" scoped></style>
+</script> 

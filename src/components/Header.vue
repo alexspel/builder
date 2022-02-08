@@ -24,9 +24,16 @@
         <router-link
             style="text-decoration: none; color: inherit"
             class="mr-4"
+            to="/project/view/1"
+        >
+            <v-btn color="default">Карточка проекта</v-btn>
+        </router-link>
+        <router-link
+            style="text-decoration: none; color: inherit"
+            class="mr-4"
             to="/bill"
         >
-            <v-btn color="default">Карточка счета</v-btn>
+            <v-btn color="default">Создание счета</v-btn>
         </router-link>
     </v-container>
 </template>
