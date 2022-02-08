@@ -5,7 +5,7 @@
             class="mr-4"
             to="/"
         >
-            <v-btn color="primary">Мои проекты</v-btn>
+            <v-btn color="primary">Реестр проектов</v-btn>
         </router-link>
         <router-link
             style="text-decoration: none; color: inherit"
@@ -13,6 +13,13 @@
             to="/request/agreement"
         >
             <v-btn color="secondary">Согласование заявок</v-btn>
+        </router-link>
+        <router-link
+            style="text-decoration: none; color: inherit"
+            class="mr-4"
+            to="/bill/list"
+        >
+            <v-btn color="secondary">Реестр счетов</v-btn>
         </router-link>
         <!-- <router-link
             style="text-decoration: none; color: inherit"

@@ -2,7 +2,7 @@
     <div v-if="billLoaded">
         <v-card class="pa-2" outlined>
             <v-card-title>
-                <h4 class="text-h4">Создание счета</h4>
+                <h2 class="text-h2 mb-4">Создание счета</h2>
             </v-card-title>
             <v-card-text>
                 <div class="d-flex text-h4">
@@ -45,11 +45,13 @@
                         <td>{{ requestPositions.indexOf(item) + 1 }}</td>
                     </template>
                     <template v-slot:item.delivered="{ item }">
-                        <v-icon>{{
-                            item.delivered === true || item.id == 1
-                                ? "mdi-checkbox-marked-circle"
-                                : "mdi-cancel"
-                        }}</v-icon>
+                        <td>
+                            <v-icon>{{
+                                item.delivered === true || item.id == 1
+                                    ? "mdi-checkbox-marked-circle"
+                                    : "mdi-cancel"
+                            }}</v-icon>
+                        </td>
                     </template>
                 </v-data-table>
             </v-card-text>
@@ -477,19 +479,18 @@ export default {
         );
         this.bill = await response.json();
         this.requestPositions = this.bill.positions;
-        console.log(this.bill);
+
         response = await fetch(
             "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"
         );
         var projects = await response.json();
         this.project = projects.find((p) => p.id == +this.bill.id);
-        console.log(this.project);
+
         response = await fetch(
             "https://raw.githubusercontent.com/alexspel/builder/billcard/data/users/users.json"
         );
         var users = await response.json();
         this.manager = users.find((p) => p.id == +this.project.author.id);
-        console.log(this.manager);
         this.billLoaded = true;
     },
 };

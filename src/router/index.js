@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Project from "../components/Project";
-import ProjectList from "../components/ProjectList";
+import ProjectList from "../components/Project/List";
 import ProjectRequestList from "../components/ProjectRequestList";
 import ProjectBillList from "../components/ProjectBillList";
 import Request from "../components/Request";
@@ -9,6 +9,7 @@ import RequestsAgreement from "../components/RequestsAgreement";
 import BillAgreement from "../components/BillAgreement";
 import BillCard from "../components/BillCard";
 import ProjectCard from "../components/ProjectCard";
+import BillList from "../components/Bill/List";
 
 Vue.use(VueRouter);
 
@@ -62,6 +63,11 @@ const routes = [
         path: "/bill",
         name: "bill",
         component: BillCard,
+    },
+    {
+        path: "/bill/list",
+        name: "bill/list",
+        component: BillList,
     },
 ];
 
