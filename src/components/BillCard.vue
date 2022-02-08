@@ -479,13 +479,13 @@ export default {
         this.requestPositions = this.bill.positions;
         console.log(this.bill);
         response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/dev/data/projects.json"
+            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"
         );
         var projects = await response.json();
         this.project = projects.find((p) => p.id == +this.bill.id);
         console.log(this.project);
         response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/dev/data/users/users.json"
+            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/users/users.json"
         );
         var users = await response.json();
         this.manager = users.find((p) => p.id == +this.project.author.id);
