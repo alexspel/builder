@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "name": "Мир фанеры",
+        "contacts": [
+            { "id": 1, "name": "Исильдур А.В.", "email": "ivv@example.ru" },
+            { "id": 2, "name": "Леголасов Э.П.", "phone": "8-999-987-65-43" }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Арматура inc",
+        "contacts": [
+            { "id": 1, "name": "Петров П.П", "email": "petrovv@example.ru" }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "ООО \"Мир дверей\"",
+        "contacts": []
+    }
+]

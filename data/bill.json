@@ -1,0 +1,27 @@
+{
+    "id": 1,
+    "positions": [
+        {
+            "id": 1,
+            "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
+            "date": "2022-02-02",
+            "value": 10,
+            "comment": "",
+            "manager": {
+                "id": 1,
+                "name": "Иванов И.И."
+            }
+        },
+        {
+            "id": 2,
+            "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
+            "date": "2022-02-02",
+            "value": 20,
+            "comment": "",
+            "manager": {
+                "id": 1,
+                "name": "Иванов И.И."
+            }
+        }
+    ]
+}

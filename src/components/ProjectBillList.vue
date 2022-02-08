@@ -11,6 +11,14 @@
                 {{ item.delivered === true ? "ДА" : "НЕТ" }}
             </template>
         </v-data-table>
+
+        <router-link
+            style="text-decoration: none; color: inherit"
+            class="mr-4"
+            to="/bill"
+        >
+            <v-btn color="primary"> Создать счет</v-btn>
+        </router-link>
     </div>
 </template>
 <script>

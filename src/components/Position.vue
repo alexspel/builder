@@ -7,7 +7,7 @@
         </v-row>
         <v-row>
             <v-col>
-                <v-select
+                <v-combobox
                     name="name"
                     :items="goods"
                     v-model="position.good"
@@ -64,6 +64,8 @@
                     name="manager"
                     :items="managers"
                     v-model="position.manager"
+                    return-object
+                    item-text="name"
                     label="Ответственный"
                 >
                 </v-select>
@@ -112,13 +114,18 @@ export default {
     data: () => ({
         dateShow: false,
         clearOnSubmit: false,
-        nameLabel: "Количество", 
+        nameLabel: "Количество",
         goods: [
             { id: 1, name: "Проволока тонкая", measure: "метров" },
             { id: 2, name: "Проволока толстая", measure: "метров" },
             { id: 3, name: "Фанера", measure: "листов" },
+            { id: 4, name: "Бетон", measure: "м3" },
         ],
-        managers: ["Петров П.П.", "Иванов И.И.", "Сидоров В.В."],
+        managers: [
+            { id: 1, name: "Иванов И.И." },
+            { id: 2, name: "Петров П.П." },
+            { id: 3, name: "Сидоров В.В." },
+        ],
         defaultPosition: {
             good: {
                 name: null,
@@ -126,9 +133,12 @@ export default {
             },
             name: "",
             date: "",
-            value: 10,
+            value: 0,
             comment: "",
-            manager: "Петров П.П.",
+            manager: {
+                id: 1,
+                name: "Иванов И.И.",
+            },
         },
         position: {
             good: {
@@ -136,9 +146,12 @@ export default {
                 measure: null,
             },
             date: "2021-11-11",
-            value: 10,
-            comment: "Что-то такое",
-            manager: "Петров П.П.",
+            value: 0,
+            comment: "",
+            manager: {
+                id: 1,
+                name: "Иванов И.И.",
+            },
         },
     }),
     computed: {
