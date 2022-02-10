@@ -1,49 +1,77 @@
 <template>
     <div v-if="billLoaded">
         <v-card class="pa-2" outlined>
-            <v-card-title class="text-h3 mb-2 font-weight-light">
-                Создание счета
+            <v-card-title>
+                <h2 class="text-h2 mb-4">Создание счета</h2>
             </v-card-title>
             <v-card-text>
-                <div class="text-h6 mb-1">
+                <div class="d-flex text-h4">
                     Проект:
                     <router-link
-                        class="ml-2"
+                        class="mr-4"
                         :to="'/project/view/' + project.id"
                     >
                         {{ project.name }}
                     </router-link>
                 </div>
-                <div class="text-h6 mb-1">
+                <br />
+                <div>
                     Руководитель:
-                    <router-link class="ml-2" :to="'/user/' + manager.id">
-                        {{ manager.name }}
+                    <router-link class="mr-4" :to="'/user/' + manager.id"
+                        >{{ manager.name }}
                     </router-link>
                 </div>
-            </v-card-text>
-        </v-card>
-        <v-card class="pa-2" outlined>
-            <v-card-title>
-                <div class="text-h4 mb-3">Нераспределенные позиции</div>
-            </v-card-title>
-            <v-card-text>
+                <br />
+                <span class="mb-4">Нераспределенные позиции</span>
                 <v-text-field
-                    v-model="searchNotAttachedPositions"
+                    v-model="search"
                     append-icon="mdi-magnify"
                     label="Поиск"
                     hide-details
-                    class="my-2"
+                    class="mb-4"
                 />
                 <v-data-table
                     :headers="requestPositionsHeaders"
                     dense
-                    :items="notAttachedPositions"
+                    :items="requestPositions"
                     class="elevation-1 row-pointer"
                     show-select
-                    :search="searchNotAttachedPositions"
+                    :search="search"
                     item-key="id"
                     :loading="!billLoaded"
-                    v-model="notAttachedSelectedPositions"
+                    v-model="selectedPositions"
+                >
+                    <template #item.index="{ item }">
+                        <td>{{ requestPositions.indexOf(item) + 1 }}</td>
+                    </template>
+                    <template v-slot:item.delivered="{ item }">
+                        <td>
+                            <v-icon>{{
+                                item.delivered === true || item.id == 1
+                                    ? "mdi-checkbox-marked-circle"
+                                    : "mdi-cancel"
+                            }}</v-icon>
+                        </td>
+                    </template>
+                </v-data-table>
+                <span class="mb-4">Нераспределенные позиции</span>
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Поиск"
+                    hide-details
+                    class="mb-4"
+                />
+                <v-data-table
+                    :headers="requestPositionsHeaders"
+                    dense
+                    :items="requestPositions"
+                    class="elevation-1 row-pointer"
+                    show-select
+                    :search="search"
+                    item-key="id"
+                    :loading="!billLoaded"
+                    v-model="selectedPositions"
                 >
                     <template #item.index="{ item }">
                         <td>{{ requestPositions.indexOf(item) + 1 }}</td>
@@ -62,7 +90,7 @@
             <v-card-actions>
                 <v-btn
                     color="primary"
-                    :disabled="notAttachedSelectedPositions.length == 0"
+                    :disabled="selectedPositions.length == 0"
                     @click="addPositionsToBill"
                 >
                     Добавить в счет
@@ -71,67 +99,20 @@
         </v-card>
 
         <v-card class="pa-2" outlined>
-            <v-card-title>
-                <div class="text-h4 mb-3">Распределенные позиции</div>
-            </v-card-title>
-            <v-card-text>
-                <v-text-field
-                    v-model="searchAttachedPositions"
-                    append-icon="mdi-magnify"
-                    label="Поиск"
-                    hide-details
-                    class="mb-4"
-                />
-                <v-data-table
-                    :headers="requestPositionsHeaders"
-                    dense
-                    :items="attachedPositions"
-                    class="elevation-1 row-pointer"
-                    show-select
-                    :search="searchAttachedPositions"
-                    item-key="id"
-                    :loading="!billLoaded"
-                >
-                    <template #item.index="{ item }">
-                        <td>{{ requestPositions.indexOf(item) + 1 }}</td>
-                    </template>
-                    <template v-slot:item.delivered="{ item }">
-                        <td>
-                            <v-icon>{{
-                                item.delivered === true || item.id == 1
-                                    ? "mdi-checkbox-marked-circle"
-                                    : "mdi-cancel"
-                            }}</v-icon>
-                        </td>
-                    </template>
-                </v-data-table>
-            </v-card-text>
-        </v-card>
-
-        <v-card class="pa-2" outlined>
-            <v-card-title>
-                <div class="text-h4 mb-3">Позиции, добавленные в счет</div>
-            </v-card-title>
             <v-card-text>
                 <v-combobox
                     :items="companies"
                     item-text="name"
                     label="Выберите поставщика"
                 />
-                <v-text-field
-                    v-model="searchBillPositions"
-                    append-icon="mdi-magnify"
-                    label="Поиск"
-                    hide-details
-                    class="mb-4"
-                />
+                <span class="mb-4">Позиции, добавленные в счет</span>
                 <v-data-table
                     :headers="billPositionsHeaders"
                     :items="billPositions"
                     dense
                     class="elevation-1 row-pointer"
                     show-select
-                    :search="searchBillPositions"
+                    :search="search"
                     item-key="id"
                 >
                     <template v-slot:top>
@@ -357,27 +338,18 @@
 <script>
 export default {
     data: () => ({
+        bill: null,
         billLoaded: false,
-
-        searchAttachedPositions: "",
-        searchNotAttachedPositions: "",
-        searchBillPositions: "",
-
+        search: "",
         project: { id: null, name: null },
         manager: { id: null, name: null },
-
         billPositions: [],
-        notAttachedSelectedPositions: [],
-        notAttachedPositions: [],
-        attachedPositions: [],
-
+        selectedPositions: [],
         dialogEditDateMenuShow: false,
         dialogEdit: false,
         dialogDelete: false,
         editedIndex: -1,
-
         requestPositions: [],
-
         defaultBillPosition: {
             position: {
                 good: {
@@ -447,7 +419,7 @@ export default {
     }),
     methods: {
         addPositionsToBill() {
-            this.notAttachedSelectedPositions.forEach((element) => {
+            this.selectedPositions.forEach((element) => {
                 var addintingItem = Object.assign(
                     {},
                     {
@@ -541,32 +513,23 @@ export default {
         },
     },
     async created() {
-        var id = this.$route.params.id;
-        console.log(id);
-        var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/bill.json"
-        );
-        var bill = await response.json();
-
-        this.notAttachedPositions = bill.positions.filter(
-            (p) => p.billId === null
-        );
-        this.attachedPositions = bill.positions.filter(
-            (p) => p.billId !== null
-        );
-
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"
-        );
-        var projects = await response.json();
-        this.project = projects.find((p) => p.id == +bill.id);
-
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/users/users.json"
-        );
-        var users = await response.json();
-        this.manager = users.find((p) => p.id == +this.project.author.id);
-        this.billLoaded = true;
+        // var id = this.$route.params.id;
+        // var response = await fetch(
+        //     "https://raw.githubusercontent.com/alexspel/builder/billcard/data/bill.json"
+        // );
+        // this.bill = await response.json();
+        // this.requestPositions = this.bill.positions;
+        // response = await fetch(
+        //     "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"
+        // );
+        // var projects = await response.json();
+        // this.project = projects.find((p) => p.id == +this.bill.id);
+        // response = await fetch(
+        //     "https://raw.githubusercontent.com/alexspel/builder/billcard/data/users/users.json"
+        // );
+        // var users = await response.json();
+        // this.manager = users.find((p) => p.id == +this.project.author.id);
+        // this.billLoaded = true;
     },
 };
 </script>

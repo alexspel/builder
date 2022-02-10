@@ -4,7 +4,14 @@
             <h2 class="text-h2 mb-4">Реестр счетов</h2>
         </v-card-title>
         <v-card-text>
-            <v-data-table :headers="billListHeaders" :items="bills">
+            <v-data-table
+                :headers="billListHeaders"
+                :items="bills"
+                :expanded.sync="expanded"
+                show-expand
+                item-key="id"
+                class="blue-grey lighten-5"
+            >
                 <template v-slot:item.project="{ item }">
                     <td>
                         <router-link
@@ -26,7 +33,17 @@
                             item.positions
                                 .map((p) => +p.value * +p.price)
                                 .reduce((p, c) => p + c)
+                                .toLocaleString()
                         }}
+                    </td>
+                </template>
+                <template v-slot:expanded-item="{ headers, item }">
+                    <td :colspan="headers.length" style="padding: 0">
+                        <v-data-table
+                            :items="item.positions"
+                            :headers="positionHeaders"
+                        >
+                        </v-data-table>
                     </td>
                 </template>
             </v-data-table>
@@ -38,6 +55,7 @@
 export default {
     methods: {},
     data: () => ({
+        expanded: [],
         company: { id: null, name: "" },
         companies: [],
         bills: [],
@@ -46,6 +64,12 @@ export default {
             { text: "Проект", value: "project" },
             { text: "Контрагент", value: "partner" },
             { text: "Сумма, руб.", value: "sum" },
+        ],
+        positionHeaders: [
+            { text: "Наименование", value: "good.name" },
+            { text: "Количество", value: "value" },
+            { text: "Ед.изм", value: "good.measure" },
+            { text: "Дата поставки", value: "date" },
         ],
     }),
     async created() {
