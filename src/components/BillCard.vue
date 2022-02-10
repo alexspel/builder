@@ -5,7 +5,7 @@
                 Создание счета
             </v-card-title>
             <v-card-text>
-                <div class="text-h6 mb-1">
+                <div class="text-h6 mb-1 font-weight-light">
                     Проект:
                     <router-link
                         class="ml-2"
@@ -14,7 +14,7 @@
                         {{ project.name }}
                     </router-link>
                 </div>
-                <div class="text-h6 mb-1">
+                <div class="text-h6 mb-1 font-weight-light">
                     Руководитель:
                     <router-link class="ml-2" :to="'/user/' + manager.id">
                         {{ manager.name }}
@@ -24,7 +24,7 @@
         </v-card>
         <v-card class="pa-2" outlined>
             <v-card-title>
-                <div class="text-h4 mb-3">Нераспределенные позиции</div>
+                <div class="text-h4 mb-3 font-weight-light">Нераспределенные позиции</div>
             </v-card-title>
             <v-card-text>
                 <v-text-field
@@ -46,15 +46,17 @@
                     v-model="notAttachedSelectedPositions"
                 >
                     <template #item.index="{ item }">
-                        <td>{{ requestPositions.indexOf(item) + 1 }}</td>
+                        <td>{{ notAttachedPositions.indexOf(item) + 1 }}</td>
                     </template>
                     <template v-slot:item.delivered="{ item }">
                         <td>
-                            <v-icon>{{
-                                item.delivered === true || item.id == 1
-                                    ? "mdi-checkbox-marked-circle"
-                                    : "mdi-cancel"
-                            }}</v-icon>
+                            <v-icon>
+                                {{
+                                    item.delivered === true
+                                        ? "mdi-checkbox-marked-circle"
+                                        : "mdi-cancel"
+                                }}
+                            </v-icon>
                         </td>
                     </template>
                 </v-data-table>
@@ -72,7 +74,7 @@
 
         <v-card class="pa-2" outlined>
             <v-card-title>
-                <div class="text-h4 mb-3">Распределенные позиции</div>
+                <div class="text-h4 mb-3 font-weight-light">Распределенные позиции</div>
             </v-card-title>
             <v-card-text>
                 <v-text-field
@@ -87,21 +89,22 @@
                     dense
                     :items="attachedPositions"
                     class="elevation-1 row-pointer"
-                    show-select
                     :search="searchAttachedPositions"
                     item-key="id"
                     :loading="!billLoaded"
                 >
                     <template #item.index="{ item }">
-                        <td>{{ requestPositions.indexOf(item) + 1 }}</td>
+                        <td>{{ attachedPositions.indexOf(item) + 1 }}</td>
                     </template>
                     <template v-slot:item.delivered="{ item }">
                         <td>
-                            <v-icon>{{
-                                item.delivered === true || item.id == 1
-                                    ? "mdi-checkbox-marked-circle"
-                                    : "mdi-cancel"
-                            }}</v-icon>
+                            <v-icon>
+                                {{
+                                    item.delivered === true
+                                        ? "mdi-checkbox-marked-circle"
+                                        : "mdi-cancel"
+                                }}
+                            </v-icon>
                         </td>
                     </template>
                 </v-data-table>
@@ -110,7 +113,7 @@
 
         <v-card class="pa-2" outlined>
             <v-card-title>
-                <div class="text-h4 mb-3">Позиции, добавленные в счет</div>
+                <div class="text-h4 mb-3 font-weight-light">Позиции, добавленные в счет</div>
             </v-card-title>
             <v-card-text>
                 <v-combobox
@@ -404,20 +407,7 @@ export default {
             value: null,
             price: null,
         },
-        companies: [
-            {
-                id: 1,
-                name: "Мир фанеры",
-            },
-            {
-                id: 2,
-                name: "Арматура inc",
-            },
-            {
-                id: 3,
-                name: 'ООО "Мир дверей"',
-            },
-        ],
+        companies: [],
         requestPositionsHeaders: [
             { text: "№ п/п", value: "index" },
             { text: "Наименование", value: "good.name" },
@@ -554,6 +544,11 @@ export default {
         this.attachedPositions = bill.positions.filter(
             (p) => p.billId !== null
         );
+
+        var response = await fetch(
+            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/companies.json"
+        );
+        this.companies = await response.json();
 
         response = await fetch(
             "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"

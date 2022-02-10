@@ -72,9 +72,8 @@ export default {
     async created() {
         var response = await fetch(
             "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"
-        );
-        var projects = await response.json();
-        this.projects = projects.filter((p) => p.id * 1 < 3);
+        ); 
+        this.projects = await response.json();
     },
 };
 </script>

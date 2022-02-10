@@ -46,11 +46,13 @@
                     </template>
                     <template v-slot:item.delivered="{ item }">
                         <td>
-                            <v-icon>{{
-                                item.delivered === true || item.id == 1
-                                    ? "mdi-checkbox-marked-circle"
-                                    : "mdi-cancel"
-                            }}</v-icon>
+                            <v-icon>
+                                {{
+                                    item.delivered === true
+                                        ? "mdi-checkbox-marked-circle"
+                                        : "mdi-cancel"
+                                }}
+                            </v-icon>
                         </td>
                     </template>
                 </v-data-table>
@@ -78,11 +80,13 @@
                     </template>
                     <template v-slot:item.delivered="{ item }">
                         <td>
-                            <v-icon>{{
-                                item.delivered === true || item.id == 1
-                                    ? "mdi-checkbox-marked-circle"
-                                    : "mdi-cancel"
-                            }}</v-icon>
+                            <v-icon>
+                                {{
+                                    item.delivered === true
+                                        ? "mdi-checkbox-marked-circle"
+                                        : "mdi-cancel"
+                                }}
+                            </v-icon>
                         </td>
                     </template>
                 </v-data-table>
