@@ -64,55 +64,13 @@
 <script>
 export default {
     data: () => ({
-        expanded: [],
-        company: { id: null, name: "" },
-        companies: [],
-        bills: [],
-        billListHeaders: [
-            { text: "Номер счета", value: "id" },
-            { text: "Проект", value: "project" },
-            { text: "Проект", value: "project.status" },
-            { text: "Контрагент", value: "partner" },
-            { text: "Сумма, руб.", value: "sum" },
-        ],
-        positionHeaders: [
-            { text: "Наименование", value: "good.name" },
-            { text: "Количество", value: "value" },
-            { text: "Цена за ед, руб", value: "price" },
-            { text: "Ед.изм", value: "good.measure" },
-            { text: "Дата поставки", value: "date" },
-        ],
-    }),
-    methods: {
-        sumField() {
-            if (this.bills.length <= 0) return 0;
-            return this.bills
-                .map((bill) =>
-                    bill.positions <= 0
-                        ? 0
-                        : bill.positions
-                              .map((bp) => +bp.price * +bp.value)
-                              .reduce((x, y) => x + y)
-                )
-                .reduce((xx, yy) => xx + yy);
+        requests: [],
+        async created() {
+            var response = await fetch(
+                "https://raw.githubusercontent.com/alexspel/builder/billcard/data/requests.json"
+            );
+            this.requests = await response.json();
         },
-    },
-    async created() {
-        var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/main/data/companies.json"
-        );
-        this.companies = await response.json();
-
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/bills.json"
-        );
-        this.bills = await response.json();
-        this.bills.forEach((bill) => {
-            var idx = this.bills.indexOf(bill);
-            this.bills[idx].partner =
-                this.companies.find((c) => +c.id === +bill.id) || this.company;
-        });
-        console.log(this.bills);
-    },
+    }),
 };
 </script>

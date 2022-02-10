@@ -545,7 +545,7 @@ export default {
             (p) => p.billId !== null
         );
 
-        var response = await fetch(
+        response = await fetch(
             "https://raw.githubusercontent.com/alexspel/builder/billcard/data/companies.json"
         );
         this.companies = await response.json();
