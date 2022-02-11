@@ -5,7 +5,9 @@ import ProjectList from "../components/Project/List";
 import ProjectCard from "../components/Project/Card";
 import ProjectForm from "../components/Project/Form";
 import ProjectRequestList from "../components/Project/Request";
+import ProjectBillList from "../components/Project/Bill";
 
+import BillCard from "../components/Bill/Card";
 import BillForm from "../components/Bill/Form";
 import BillList from "../components/Bill/List";
 
@@ -14,7 +16,6 @@ import RequestForm from "../components/Request/Form";
 import RequestList from "../components/Request/List";
 
 import PaymentList from "../components/Payment/List";
-
 
 Vue.use(VueRouter);
 
@@ -41,8 +42,8 @@ const routes = [
     },
     {
         path: "/project/:id/bill",
-        name: "ProjectRequestList",
-        component: ProjectRequestList,
+        name: "ProjectBillList",
+        component: ProjectBillList,
     },
 
     {
@@ -59,6 +60,12 @@ const routes = [
         path: "/request/list/",
         name: "RequestList",
         component: RequestList,
+    },
+
+    {
+        path: "/bill/view/:id",
+        name: "billCard",
+        component: BillCard,
     },
 
     {

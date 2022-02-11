@@ -17,7 +17,7 @@
                 </template>
                 <template v-slot:item.name="{ item }">
                     <td>
-                        <router-link class="mr-4" :to="`/request/${item.id}`">
+                        <router-link class="mr-4" :to="`/request/view/${item.id}`">
                             {{ item.name }}
                         </router-link>
                     </td>

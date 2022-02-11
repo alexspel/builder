@@ -12,11 +12,21 @@
                 item-key="id"
                 class="blue-grey lighten-5"
             >
+                <template v-slot:item.id="{ item }">
+                    <td>
+                        <router-link
+                            class="mr-4"
+                            :to="`/bill/view/${item.id}`"
+                        >
+                            {{ item.id }}
+                        </router-link>
+                    </td>
+                </template>
                 <template v-slot:item.project="{ item }">
                     <td>
                         <router-link
                             class="mr-4"
-                            :to="'/project/view/' + item.project.id"
+                            :to="`/project/view/${item.project.id}`"
                         >
                             {{ item.project.name }}
                         </router-link>
