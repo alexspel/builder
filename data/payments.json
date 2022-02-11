@@ -1,0 +1,182 @@
+[
+    {
+        "id": 1,
+        "project": 10,
+        "bill": 6,
+        "amount": 206764.11,
+        "partner": 9,
+        "date": "09.10.2021",
+        "status": 1
+    },
+    {
+        "id": 2,
+        "project": 10,
+        "bill": 10,
+        "amount": 419020.51,
+        "partner": 6,
+        "date": "10.05.2021",
+        "status": 1
+    },
+    {
+        "id": 3,
+        "project": 2,
+        "bill": 9,
+        "amount": 252702.84,
+        "partner": 3,
+        "date": "16.06.2021",
+        "status": 2
+    },
+    {
+        "id": 4,
+        "project": 2,
+        "bill": 7,
+        "amount": 74179.43,
+        "partner": 3,
+        "date": "10.01.2022",
+        "status": 2
+    },
+    {
+        "id": 5,
+        "project": 7,
+        "bill": 6,
+        "amount": 487529.38,
+        "partner": 6,
+        "date": "17.02.2021",
+        "status": 2
+    },
+    {
+        "id": 6,
+        "project": 7,
+        "bill": 4,
+        "amount": 226008.0,
+        "partner": 2,
+        "date": "06.08.2021",
+        "status": 1
+    },
+    {
+        "id": 7,
+        "project": 8,
+        "bill": 3,
+        "amount": 30831.24,
+        "partner": 3,
+        "date": "19.11.2021",
+        "status": 1
+    },
+    {
+        "id": 8,
+        "project": 3,
+        "bill": 6,
+        "amount": 354758.28,
+        "partner": 9,
+        "date": "14.02.2021",
+        "status": 2
+    },
+    {
+        "id": 9,
+        "project": 5,
+        "bill": 7,
+        "amount": 289043.62,
+        "partner": 7,
+        "date": "12.01.2022",
+        "status": 3
+    },
+    {
+        "id": 10,
+        "project": 4,
+        "bill": 3,
+        "amount": 200538.66,
+        "partner": 5,
+        "date": "19.03.2021",
+        "status": 2
+    },
+    {
+        "id": 11,
+        "project": 10,
+        "bill": 7,
+        "amount": 204636.16,
+        "partner": 8,
+        "date": "08.06.2021",
+        "status": 3
+    },
+    {
+        "id": 12,
+        "project": 1,
+        "bill": 1,
+        "amount": 248715.95,
+        "partner": 1,
+        "date": "31.12.2021",
+        "status": 1
+    },
+    {
+        "id": 13,
+        "project": 6,
+        "bill": 4,
+        "amount": 101550.77,
+        "partner": 4,
+        "date": "13.01.2022",
+        "status": 1
+    },
+    {
+        "id": 14,
+        "project": 6,
+        "bill": 2,
+        "amount": 212714.63,
+        "partner": 2,
+        "date": "25.11.2021",
+        "status": 2
+    },
+    {
+        "id": 15,
+        "project": 9,
+        "bill": 2,
+        "amount": 326666.14,
+        "partner": 4,
+        "date": "28.05.2021",
+        "status": 1
+    },
+    {
+        "id": 16,
+        "project": 8,
+        "bill": 2,
+        "amount": 153017.85,
+        "partner": 5,
+        "date": "10.05.2021",
+        "status": 2
+    },
+    {
+        "id": 17,
+        "project": 2,
+        "bill": 9,
+        "amount": 337956.09,
+        "partner": 6,
+        "date": "27.02.2021",
+        "status": 1
+    },
+    {
+        "id": 18,
+        "project": 9,
+        "bill": 1,
+        "amount": 318640.0,
+        "partner": 5,
+        "date": "18.02.2021",
+        "status": 1
+    },
+    {
+        "id": 19,
+        "project": 10,
+        "bill": 6,
+        "amount": 127669.76,
+        "partner": 1,
+        "date": "10.02.2022",
+        "status": 2
+    },
+    {
+        "id": 20,
+        "project": 10,
+        "bill": 2,
+        "amount": 51370.66,
+        "partner": 2,
+        "date": "04.12.2021",
+        "status": 2
+    }
+]

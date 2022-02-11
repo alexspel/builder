@@ -10,9 +10,9 @@
         <router-link
             style="text-decoration: none; color: inherit"
             class="mr-4"
-            to="/request/agreement"
+            to="/request/list"
         >
-            <v-btn color="secondary">Согласование заявок</v-btn>
+            <v-btn color="secondary">Реестр заявок</v-btn>
         </router-link>
         <router-link
             style="text-decoration: none; color: inherit"
@@ -20,6 +20,13 @@
             to="/bill/list"
         >
             <v-btn color="secondary">Реестр счетов</v-btn>
+        </router-link>
+        <router-link
+            style="text-decoration: none; color: inherit"
+            class="mr-4"
+            to="/payment/list"
+        >
+            <v-btn color="secondary">Реестр платежей</v-btn>
         </router-link>
         <!-- <router-link
             style="text-decoration: none; color: inherit"

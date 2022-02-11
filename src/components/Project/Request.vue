@@ -1,22 +1,32 @@
 <template>
     <v-card class="pa-2" outlined>
         <v-card-title>
-            <h2 class="text-h2 mb-4">Реестр счетов</h2>
+            <h2 class="text-h2 mb-4">Реестр заявок проекта</h2>
         </v-card-title>
         <v-card-text>
             <v-data-table
-                :headers="billListHeaders"
-                :items="bills"
+                :headers="requestHeaders"
+                :items="requests"
                 :expanded.sync="expanded"
                 show-expand
                 item-key="id"
                 class="blue-grey lighten-5"
             >
+                <template #item.index="{ item }">
+                    <td>{{ requests.indexOf(item) + 1 }}</td>
+                </template>
+                <template v-slot:item.name="{ item }">
+                    <td>
+                        <router-link class="mr-4" :to="`/request/${item.id}`">
+                            {{ item.name }}
+                        </router-link>
+                    </td>
+                </template>
                 <template v-slot:item.project="{ item }">
                     <td>
                         <router-link
                             class="mr-4"
-                            :to="'/project/view/' + item.project.id"
+                            :to="`/project/view/${item.project.id}`"
                         >
                             {{ item.project.name }}
                         </router-link>
@@ -25,6 +35,11 @@
                 <template v-slot:item.partner="{ item }">
                     <td>
                         {{ item.partner.name }}
+                    </td>
+                </template>
+                <template v-slot:item.positions="{ item }">
+                    <td>
+                        {{ item.positions.length }}
                     </td>
                 </template>
                 <template v-slot:item.sum="{ item }">
@@ -58,69 +73,44 @@
                 </template>
             </v-data-table>
         </v-card-text>
-        <v-card-actions class="pa-4">
-            <router-link
-                style="text-decoration: none; color: inherit"
-                to="/bill/create"
-            >
-                <v-btn color="primary">Создать счет</v-btn>
-            </router-link>
-        </v-card-actions>
     </v-card>
 </template>
 
 <script>
 export default {
-    data: () => ({
-        expanded: [],
-        company: { id: null, name: "" },
-        companies: [],
-        bills: [],
-        billListHeaders: [
-            { text: "Номер счета", value: "id" },
-            { text: "Проект", value: "project" },
-            { text: "Проект", value: "project.status" },
-            { text: "Контрагент", value: "partner" },
-            { text: "Сумма, руб.", value: "sum" },
-        ],
-        positionHeaders: [
-            { text: "Наименование", value: "good.name" },
-            { text: "Количество", value: "value" },
-            { text: "Цена за ед, руб", value: "price" },
-            { text: "Ед.изм", value: "good.measure" },
-            { text: "Дата поставки", value: "date" },
-        ],
-    }),
     methods: {
         sumField() {
-            if (this.bills.length <= 0) return 0;
-            return this.bills
-                .map((bill) =>
-                    bill.positions <= 0
-                        ? 0
-                        : bill.positions
-                              .map((bp) => +bp.price * +bp.value)
-                              .reduce((x, y) => x + y)
-                )
-                .reduce((xx, yy) => xx + yy);
+            return 0;
         },
     },
+    data: () => ({
+        expanded:[],
+        requests:[],
+        requestHeaders: [
+            { text: "№ п/п", value: "index" },
+            { text: "Название заявки", value: "name" },
+            { text: "Проект", value: "project" },
+            { text: "Количество позиций", value: "positions" },
+        ],
+        positionHeaders: [
+            { text: "№ п/п", value: "index" },
+            { text: "Наименование", value: "good.name" },
+            { text: "Кол-во", value: "value" },
+            { text: "Ед.изм", value: "good.measure" },
+            { text: "Необходимая дата доставки", value: "date" },
+            { text: "Комментарий", value: "comment" },
+            { text: "Ответственный", value: "manager.name" },
+            { text: "Доставлено", value: "delivered" },
+        ],
+    }),
     async created() {
+        var id = +this.$route.params.id;
         var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/main/data/companies.json"
+            "https://raw.githubusercontent.com/alexspel/builder/main/data/requests.json"
         );
-        this.companies = await response.json();
-
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/bills.json"
-        );
-        this.bills = await response.json();
-        this.bills.forEach((bill) => {
-            var idx = this.bills.indexOf(bill);
-            this.bills[idx].partner =
-                this.companies.find((c) => +c.id === +bill.id) || this.company;
-        });
-        console.log(this.bills);
+        var requests = await response.json();
+        this.requests = requests.filter((r) => +r.project.id === id);
+        console.log(this.requests);
     },
 };
 </script>

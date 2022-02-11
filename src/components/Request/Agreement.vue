@@ -33,8 +33,7 @@
                         <template #item.index="{ item }">
                             {{ request.positions.indexOf(item) + 1 }}
                         </template>
-                    </v-data-table>
-                    <v-text-field label="Комментарий" :value="comment" />
+                    </v-data-table> 
                 </v-card-text>
                 <v-card-actions>
                     <v-btn color="primary" class="mr-4" @click="dialog = true"
@@ -91,8 +90,7 @@ export default {
         var response = await fetch(
             "https://raw.githubusercontent.com/alexspel/builder/main/data/requests.json"
         );
-        var data = await response.json();
-        this.requests = data;
+        this.requests = await response.json();
     },
 };
 </script>

@@ -1,15 +1,20 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Project from "../components/Project";
+
 import ProjectList from "../components/Project/List";
-import ProjectRequestList from "../components/ProjectRequestList";
-import ProjectBillList from "../components/ProjectBillList";
-import Request from "../components/Request";
-import RequestsAgreement from "../components/Request/Agreement";
-import BillAgreement from "../components/BillAgreement";
-import BillForm from "../components/Bill/Form";
 import ProjectCard from "../components/Project/Card";
+import ProjectForm from "../components/Project/Form";
+import ProjectRequestList from "../components/Project/Request";
+
+import BillForm from "../components/Bill/Form";
 import BillList from "../components/Bill/List";
+
+import RequestCard from "../components/Request/Card";
+import RequestForm from "../components/Request/Form";
+import RequestList from "../components/Request/List";
+
+import PaymentList from "../components/Payment/List";
+
 
 Vue.use(VueRouter);
 
@@ -20,54 +25,57 @@ const routes = [
         component: ProjectList,
     },
     {
-        path: "/project",
-        name: "projects",
-        component: ProjectList,
-    },
-    {
         path: "/project/view/:id",
-        name: "project",
+        name: "projectView",
         component: ProjectCard,
     },
     {
         path: "/project/create",
-        name: "project/create",
-        component: Project,
+        name: "projectForm",
+        component: ProjectForm,
     },
     {
-        path: "/project/request/:id",
-        name: "projects/request",
+        path: "/project/:id/request",
+        name: "ProjectRequestList",
         component: ProjectRequestList,
     },
     {
-        path: "/project/bill/:id",
-        name: "projects/bill",
-        component: ProjectBillList,
+        path: "/project/:id/bill",
+        name: "ProjectRequestList",
+        component: ProjectRequestList,
+    },
+
+    {
+        path: "/request/view/:id",
+        name: "RequestCard",
+        component: RequestCard,
     },
     {
         path: "/request/create",
-        name: "request/create",
-        component: Request,
+        name: "RequestForm",
+        component: RequestForm,
     },
     {
-        path: "/request/agreement",
-        name: "request/agreement",
-        component: RequestsAgreement,
+        path: "/request/list/",
+        name: "RequestList",
+        component: RequestList,
     },
-    {
-        path: "/bill/agreement",
-        name: "bill/agreement",
-        component: BillAgreement,
-    },
+
     {
         path: "/bill/create",
-        name: "bill",
+        name: "billForm",
         component: BillForm,
     },
     {
         path: "/bill/list",
-        name: "bill/list",
+        name: "BillList",
         component: BillList,
+    },
+
+    {
+        path: "/payment/list",
+        name: "PaymentList",
+        component: PaymentList,
     },
 ];
 

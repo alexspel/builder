@@ -14,59 +14,104 @@
                 <v-col>
                     <v-card-text>
                         <div class="text-h5 mb-3">
-                            <span class="font-weight-medium"
-                                >Статус проекта:</span
-                            >
+                            <span class="font-weight-medium mr-2">
+                                Название проекта:
+                            </span>
+                            {{ project.name }}
+                        </div>
+                        <div class="text-h5 mb-3">
+                            <span class="font-weight-medium mr-2">
+                                Статус проекта:
+                            </span>
                             {{ project.status }}
                         </div>
-                        <div class="text-h5 mb-3" v-if="project.comment">
-                            <span class="font-weight-medium">Комментарий:</span>
-                            {{ project.comment }}
+                        <div class="text-h5 mb-3">
+                            <span class="font-weight-medium mr-2">
+                                Руководитель проекта:
+                            </span>
+                            <a :href="`/user/view/${project.author.id}`">{{
+                                project.author.name
+                            }}</a>
+                        </div>
+                        <div class="text-h5 mb-3">
+                            <div>
+                                <span class="font-weight-medium mr-2 mb-3">
+                                    Контрагент:
+                                </span>
+                                {{ project.partner.name }}
+                            </div>
+                            <div
+                                v-if="
+                                    project.partner.contacts &&
+                                    project.partner.contacts.length > 0
+                                "
+                            >
+                                <div class="font-weight-medium">
+                                    Контакты контрагента:
+                                </div>
+                                <ul style="list-style: none" class="pl-3">
+                                    <li
+                                        v-for="contact in project.partner
+                                            .contacts"
+                                        :key="contact.id"
+                                        class="mb-0"
+                                    >
+                                        {{ contact.name }}
+                                        {{ contact.email || contact.phone }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div
+                            v-if="
+                                project.documents &&
+                                project.documents.length > 0
+                            "
+                            class="text-h5 mb-3"
+                        >
+                            <div class="font-weight-medium">
+                                Документы проекта:
+                            </div>
+                            <ul style="list-style: none" class="pl-3">
+                                <li
+                                    v-for="document in project.documents"
+                                    :key="document.id"
+                                    class="mb-0"
+                                >
+                                    <a :href="document.link">
+                                        {{ document.name }}
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                         <div class="text-h5 mb-3">
                             <span class="font-weight-medium"> Адрес: </span>
                             {{ project.address }}
                         </div>
-                        <div class="text-h5">
-                            <span class="font-weight-medium">
-                                Информация о контрагенте:
-                            </span>
-                            {{ project.partner.name }}
+                        <div
+                            v-if="
+                                project.contacts && project.contacts.length > 0
+                            "
+                            class="text-h5 mb-3"
+                        >
+                            <div class="font-weight-medium">
+                                Контакты на объекте:
+                            </div>
+                            <ul style="list-style: none" class="pl-3">
+                                <li
+                                    v-for="contact in project.contacts"
+                                    :key="contact.id"
+                                    class="mb-0"
+                                >
+                                    {{ contact.name }}
+                                </li>
+                            </ul>
                         </div>
-                        <v-list>
-                            <v-list-item>
-                                <v-list-item-content>
-                                    <v-list-item-title
-                                        v-for="contact in project.partner
-                                            .contacts"
-                                        :key="contact.id"
-                                        class="text-h5 mb-3"
-                                    >
-                                        {{ contact.name }}
-                                        {{ contact.email || contact.phone }}
-                                    </v-list-item-title>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </v-list>
-                        <div v-if="project.documents">
-                            <span class="text-h5 font-weight-medium">
-                                Документы проекта:
+                        <div class="text-h5 mb-3" v-if="project.comment">
+                            <span class="font-weight-medium mr-2">
+                                Комментарий:
                             </span>
-                            <v-list>
-                                <v-list-item>
-                                    <v-list-item-content>
-                                        <v-list-item-title
-                                            v-for="document in project.documents"
-                                            :key="document.id"
-                                            class="text-h5 mb-3"
-                                        >
-                                            <a :href="document.link">{{
-                                                document.name
-                                            }}</a>
-                                        </v-list-item-title>
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </v-list>
+                            <p>{{ project.comment }}</p>
                         </div>
                     </v-card-text>
                 </v-col>
@@ -98,12 +143,12 @@
 
 <script>
 export default {
-    data: () => ({ 
+    data: () => ({
         slide: 0,
         colors: ["primary", "secondary", "yellow darken-2", "red", "orange"],
         project: {
             name: null,
-            author: null,
+            author: { id: null, name: null },
             comment: null,
             status: null,
             address: null,
@@ -119,7 +164,7 @@ export default {
         var response = await fetch(
             "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"
         );
-        var p = await response.json();  
+        var p = await response.json();
         this.project = p.find((p) => p.id === +this.$route.params.id);
     },
 };
