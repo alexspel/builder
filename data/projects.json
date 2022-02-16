@@ -45,12 +45,106 @@
     },
     {
         "id": 3,
-        "name": "ЖК Цветочная поляна",
-        "comment": "ЖК Цветочная поляна",
-        "status": "В работе",
+        "name": "Магазин дверей",
+        "comment": "",
+        "status": "Новый",
+        "address": "ул. Ленина, дом 13",
         "author": {
-            "id": 2,
-            "name": "Петров П.П."
+            "id": 1,
+            "name": "Иванов И.И."
+        },
+        "documents": [
+            { "name": "Договор", "link": "/project" },
+            { "name": "Смета", "link": "/project" }
+        ],
+        "partner": {
+            "name": "ООО Мир дверей",
+            "contacts": [
+                { "id": 1, "name": "Исильдур А.В.", "email": "ivv@example.ru" },
+                {
+                    "id": 2,
+                    "name": "Леголасов Э.П.",
+                    "phone": "8-999-987-65-43"
+                }
+            ]
+        }
+    },
+    {
+        "id": 4,
+        "name": "ЖК Сады и огороды",
+        "comment": "ЖК Сады и огороды",
+        "status": "Новый",
+        "address": "ул. Ленина, дом 13",
+        "author": {
+            "id": 1,
+            "name": "Иванов И.И."
+        },
+        "documents": [
+            { "name": "Договор", "link": "/project" },
+            { "name": "Смета", "link": "/project" }
+        ],
+        "partner": {
+            "name": "ООО Вкусные ватрушки",
+            "contacts": [
+                { "id": 1, "name": "Исильдур А.В.", "email": "ivv@example.ru" },
+                {
+                    "id": 2,
+                    "name": "Леголасов Э.П.",
+                    "phone": "8-999-987-65-43"
+                }
+            ]
+        }
+    },
+    {
+        "id": 5,
+        "name": "ЖК Сметана",
+        "comment": "ЖК Сады и огороды",
+        "status": "Новый",
+        "address": "ул. Ленина, дом 13",
+        "author": {
+            "id": 1,
+            "name": "Иванов И.И."
+        },
+        "documents": [
+            { "name": "Договор", "link": "/project" },
+            { "name": "Смета", "link": "/project" }
+        ],
+        "partner": {
+            "name": "ООО Кафирчик",
+            "contacts": [
+                { "id": 1, "name": "Исильдур А.В.", "email": "ivv@example.ru" },
+                {
+                    "id": 2,
+                    "name": "Леголасов Э.П.",
+                    "phone": "8-999-987-65-43"
+                }
+            ]
+        }
+    },
+    {
+        "id": 6,
+        "name": "ЖК Сады и огороды",
+        "comment": "ЖК Сады и огороды",
+        "status": "Новый",
+        "address": "ул. Ленина, дом 13",
+        "author": {
+            "id": 1,
+            "name": "Иванов И.И."
+        },
+        "documents": [
+            { "name": "Договор", "link": "/project" },
+            { "name": "Смета", "link": "/project" }
+        ],
+        "partner": {
+            "name": "ООО Вкусные ватрушки",
+            "contacts": [
+                { "id": 1, "name": "Исильдур А.В.", "email": "ivv@example.ru" },
+                {
+                    "id": 2,
+                    "name": "Леголасов Э.П.",
+                    "phone": "8-999-987-65-43"
+                }
+            ]
         }
     }
 ]

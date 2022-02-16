@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "billId": 1,
+        "projectId": 1,
+        "amount": 100,
+        "date": "2022-02-02",
+        "status": "Запланирован",
+        "partner": {
+            "id": 1,
+            "name": "Мир дверей"
+        }
+    },
+    {
+        "id": 2,
+        "billId": 1,
+        "projectId": 1,
+        "amount": 200,
+        "date": "2022-02-02",
+        "status": "Запланирован",
+        "partner": {
+            "id": 1,
+            "name": "Мир дверей"
+        }
+    },
+    {
+        "id": 3,
+        "billId": 1,
+        "amount": 300,
+        "date": "2022-02-02",
+        "status": "Запланирован",
+        "partner": {
+            "id": 1,
+            "name": "Мир дверей"
+        }
+    }
+]
