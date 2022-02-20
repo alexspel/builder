@@ -1,0 +1,65 @@
+{
+    "id": 1,
+    "positions": [
+        {
+            "id": 1,
+            "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
+            "date": "2022-02-02",
+            "value": 10,
+            "comment": "",
+            "manager": {
+                "id": 1,
+                "name": "Иванов И.И."
+            },
+            "billId": 1
+        },
+        {
+            "id": 2,
+            "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
+            "date": "2022-02-02",
+            "value": 20,
+            "comment": "",
+            "manager": {
+                "id": 1,
+                "name": "Иванов И.И."
+            },
+            "billId": null
+        },
+        {
+            "id": 3,
+            "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
+            "date": "2022-06-02",
+            "value": 10,
+            "comment": "",
+            "manager": {
+                "id": 1,
+                "name": "Иванов И.И."
+            },
+            "billId": 2
+        },
+        {
+            "id": 4,
+            "good": { "id": 3, "name": "Фанера", "measure": "Листов" },
+            "date": "2022-06-02",
+            "value": 20,
+            "comment": "",
+            "manager": {
+                "id": 1,
+                "name": "Иванов И.И."
+            },
+            "billId": null
+        },
+        {
+            "id": 5,
+            "good": { "id": 3, "name": "Шифер", "measure": "Листов" },
+            "date": "2022-06-02",
+            "value": 20,
+            "comment": "",
+            "manager": {
+                "id": 1,
+                "name": "Иванов И.И."
+            },
+            "billId": null
+        }
+    ]
+}

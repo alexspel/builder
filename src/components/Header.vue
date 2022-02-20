@@ -5,21 +5,42 @@
             class="mr-4"
             to="/"
         >
-            <v-btn color="success">Home</v-btn>
+            <v-btn color="primary">Реестр проектов</v-btn>
         </router-link>
         <router-link
             style="text-decoration: none; color: inherit"
             class="mr-4"
-            to="/project"
+            to="/request/list"
         >
-            <v-btn color="default">Мои проекты</v-btn>
+            <v-btn color="secondary">Реестр заявок</v-btn>
         </router-link>
         <router-link
             style="text-decoration: none; color: inherit"
             class="mr-4"
-            to="/request/agreement"
+            to="/bill/list"
+        >
+            <v-btn color="secondary">Реестр счетов</v-btn>
+        </router-link>
+        <router-link
+            style="text-decoration: none; color: inherit"
+            class="mr-4"
+            to="/payment/list"
+        >
+            <v-btn color="secondary">Реестр платежей</v-btn>
+        </router-link>
+        <!-- <router-link
+            style="text-decoration: none; color: inherit"
+            class="mr-4"
+            to="/project/view/1"
+        >
+            <v-btn color="default">Карточка проекта</v-btn>
+        </router-link> -->
+        <!-- <router-link
+            style="text-decoration: none; color: inherit"
+            class="mr-4"
+            to="/bill"
         >
             <v-btn color="default">Согласование заявок</v-btn>
-        </router-link> 
+        </router-link> -->
     </v-container>
 </template>
