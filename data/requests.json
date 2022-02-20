@@ -95,5 +95,173 @@
                 "deliveryFact": "2022-01-01"
             }
         ]
+    },
+    {
+        "id": 3,
+        "name": "Вторая заявка",
+        "project": {
+            "id": 2,
+            "name": "ЖК Сельдерей",
+            "status": "В работе"
+        },
+        "positions": [
+            {
+                "id": 3,
+                "good": {
+                    "id": 1,
+                    "name": "Проволока тонкая",
+                    "measure": "Метров"
+                },
+                "value": 20,
+                "date": "2022-01-01",
+                "comment": "",
+                "manager": { "id": 1, "name": "Иванов И.И." },
+                "status": "Доставлено",
+                "deliveryPlan": "2022-01-01",
+                "deliveryFact": "2022-01-01"
+            },
+            {
+                "id": 4,
+                "good": {
+                    "id": 2,
+                    "name": "Проволока толстая",
+                    "measure": "Метров"
+                },
+                "value": 30,
+                "date": "2022-01-01",
+                "comment": "",
+                "manager": { "id": 1, "name": "Иванов И.И." },
+                "status": "Доставлено",
+                "deliveryPlan": "2022-02-02",
+                "deliveryFact": "2022-01-01"
+            },
+            {
+                "id": 5,
+                "good": {
+                    "id": 3,
+                    "name": "Фанера 5мм",
+                    "measure": "Листов"
+                },
+                "value": 30,
+                "date": "2022-01-01",
+                "comment": "",
+                "manager": { "id": 1, "name": "Иванов И.И." },
+                "status": "Доставлено",
+                "deliveryPlan": "2022-02-02",
+                "deliveryFact": "2022-01-01"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "Вторая заявка",
+        "project": {
+            "id": 2,
+            "name": "ЖК Сельдерей",
+            "status": "В работе"
+        },
+        "positions": [
+            {
+                "id": 3,
+                "good": {
+                    "id": 1,
+                    "name": "Проволока тонкая",
+                    "measure": "Метров"
+                },
+                "value": 20,
+                "date": "2022-01-01",
+                "comment": "",
+                "manager": { "id": 1, "name": "Иванов И.И." },
+                "status": "Доставлено",
+                "deliveryPlan": "2022-01-01",
+                "deliveryFact": "2022-01-01"
+            },
+            {
+                "id": 4,
+                "good": {
+                    "id": 2,
+                    "name": "Проволока толстая",
+                    "measure": "Метров"
+                },
+                "value": 30,
+                "date": "2022-01-01",
+                "comment": "",
+                "manager": { "id": 1, "name": "Иванов И.И." },
+                "status": "Доставлено",
+                "deliveryPlan": "2022-02-02",
+                "deliveryFact": "2022-01-01"
+            },
+            {
+                "id": 5,
+                "good": {
+                    "id": 3,
+                    "name": "Фанера 5мм",
+                    "measure": "Листов"
+                },
+                "value": 30,
+                "date": "2022-01-01",
+                "comment": "",
+                "manager": { "id": 1, "name": "Иванов И.И." },
+                "status": "Доставлено",
+                "deliveryPlan": "2022-02-02",
+                "deliveryFact": "2022-01-01"
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "name": "Вторая заявка",
+        "project": {
+            "id": 2,
+            "name": "ЖК Сельдерей",
+            "status": "В работе"
+        },
+        "positions": [
+            {
+                "id": 3,
+                "good": {
+                    "id": 1,
+                    "name": "Проволока тонкая",
+                    "measure": "Метров"
+                },
+                "value": 20,
+                "date": "2022-01-01",
+                "comment": "",
+                "manager": { "id": 1, "name": "Иванов И.И." },
+                "status": "Доставлено",
+                "deliveryPlan": "2022-01-01",
+                "deliveryFact": "2022-01-01"
+            },
+            {
+                "id": 4,
+                "good": {
+                    "id": 2,
+                    "name": "Проволока толстая",
+                    "measure": "Метров"
+                },
+                "value": 30,
+                "date": "2022-01-01",
+                "comment": "",
+                "manager": { "id": 1, "name": "Иванов И.И." },
+                "status": "Доставлено",
+                "deliveryPlan": "2022-02-02",
+                "deliveryFact": "2022-01-01"
+            },
+            {
+                "id": 5,
+                "good": {
+                    "id": 3,
+                    "name": "Фанера 5мм",
+                    "measure": "Листов"
+                },
+                "value": 30,
+                "date": "2022-01-01",
+                "comment": "",
+                "manager": { "id": 1, "name": "Иванов И.И." },
+                "status": "Доставлено",
+                "deliveryPlan": "2022-02-02",
+                "deliveryFact": "2022-01-01"
+            }
+        ]
     }
 ]
