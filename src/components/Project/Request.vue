@@ -1,75 +1,81 @@
 <template>
-    <v-card class="pa-2" outlined>
+    <v-card class="pa-2" outlined v-if="loaded">
         <v-card-title>
             <h2 class="text-h2 mb-4">Реестр заявок проекта</h2>
         </v-card-title>
         <v-card-text>
+            <div class="text-h5 mb-4">Название проекта: {{ project.name }}</div>
+            <div class="text-h5 mb-4">
+                Контрагент: {{ getCompanyById(1).name }}
+            </div>
+            <div class="text-h5 mb-4">Заявки проекта:</div>
             <v-data-table
                 :headers="requestHeaders"
-                :items="requests"
+                :items="getRequests"
                 :expanded.sync="expanded"
                 show-expand
                 item-key="id"
                 class="blue-grey lighten-5"
             >
-                <template #item.index="{ item }">
-                    <td>{{ requests.indexOf(item) + 1 }}</td>
-                </template>
-                <template v-slot:item.name="{ item }">
+                <template v-slot:item.index="{ item }">
                     <td>
-                        <router-link class="mr-4" :to="`/request/view/${item.id}`">
+                        {{ getRequests.indexOf(item) + 1 }}
+                    </td>
+                </template>
+                <template v-slot:item.request="{ item }">
+                    <td>
+                        <router-link
+                            class="mr-4"
+                            :to="`/request/view/${item.projectID}`"
+                        >
                             {{ item.name }}
                         </router-link>
                     </td>
                 </template>
-                <template v-slot:item.project="{ item }">
-                    <td>
-                        <router-link
-                            class="mr-4"
-                            :to="`/project/view/${item.project.id}`"
-                        >
-                            {{ item.project.name }}
-                        </router-link>
-                    </td>
-                </template>
-                <template v-slot:item.partner="{ item }">
-                    <td>
-                        {{ item.partner.name }}
-                    </td>
-                </template>
                 <template v-slot:item.positions="{ item }">
                     <td>
-                        {{ item.positions.length }}
-                    </td>
-                </template>
-                <template v-slot:item.sum="{ item }">
-                    <td>
-                        {{
-                            item.positions
-                                .map((p) => +p.value * +p.price)
-                                .reduce((p, c) => p + c)
-                                .toLocaleString()
-                        }}
+                        {{ getPositionsByRequestId(item.id).length }}
                     </td>
                 </template>
                 <template v-slot:expanded-item="{ headers, item }">
                     <td :colspan="headers.length" style="padding: 0">
                         <v-data-table
-                            :items="item.positions"
+                            :items="getPositionsByRequestId(item.id)"
                             :headers="positionHeaders"
                         >
+                            <template v-slot:item.index="{ item }">
+                                <td>
+                                    {{
+                                        getPositionsByRequestId(
+                                            item.requestID
+                                        ).indexOf(item) + 1
+                                    }}
+                                </td>
+                            </template>
+                            <template v-slot:item.good="{ item }">
+                                <td>
+                                    {{ getGoodById(item.goodID).name }}
+                                </td>
+                            </template>
+                            <template v-slot:item.measure="{ item }">
+                                <td>
+                                    {{ getGoodById(item.goodID).measure }}
+                                </td>
+                            </template>
+                            <template v-slot:item.date="{ item }">
+                                <td>
+                                    {{
+                                        new Date(item.date).toLocaleDateString()
+                                    }}
+                                </td>
+                            </template>
+                            <template v-slot:item.manager="{ item }">
+                                <td>
+                                    {{ getUserById(item.managerID).name }}
+                                </td>
+                            </template>
                         </v-data-table>
                     </td>
-                </template>
-                <template slot="body.append">
-                    <tr class="pink--text">
-                        <th class="title"></th>
-                        <th class="title">Итого</th>
-                        <th class="title"></th>
-                        <th class="title"></th>
-                        <th class="title"></th>
-                        <th class="title">{{ sumField("protein") }}</th>
-                    </tr>
                 </template>
             </v-data-table>
         </v-card-text>
@@ -77,40 +83,51 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
-    methods: {
-        sumField() {
-            return 0;
-        },
+    computed: {
+        ...mapGetters([
+            "getRequests",
+            "getProjectById",
+            "getStatusById",
+            "getUserById",
+            "getGoodById",
+            "getCompanyById",
+            "getPositionsByRequestId",
+        ]),
     },
     data: () => ({
-        expanded:[],
-        requests:[],
+        loaded: false,
+        project: { id: null, name: null },
+        expanded: [],
+        requests: [],
         requestHeaders: [
             { text: "№ п/п", value: "index" },
-            { text: "Название заявки", value: "name" },
-            { text: "Проект", value: "project" },
+            { text: "Название заявки", value: "request" },
             { text: "Количество позиций", value: "positions" },
         ],
         positionHeaders: [
             { text: "№ п/п", value: "index" },
-            { text: "Наименование", value: "good.name" },
+            { text: "Наименование", value: "good" },
             { text: "Кол-во", value: "value" },
-            { text: "Ед.изм", value: "good.measure" },
+            { text: "Ед.изм", value: "measure" },
             { text: "Необходимая дата доставки", value: "date" },
             { text: "Комментарий", value: "comment" },
-            { text: "Ответственный", value: "manager.name" },
+            { text: "Ответственный", value: "manager" },
             { text: "Доставлено", value: "delivered" },
         ],
     }),
-    async created() {
-        var id = +this.$route.params.id;
-        var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/main/data/requests.json"
-        );
-        var requests = await response.json();
-        this.requests = requests.filter((r) => +r.project.id === id);
-        console.log(this.requests);
+    created() {
+        Promise.all([
+            this.$store.dispatch("loadProjects"),
+            this.$store.dispatch(
+                "loadRequestsByProjectId",
+                this.$route.params.id
+            ),
+        ]).then(() => {
+            this.project = this.getProjectById(this.$route.params.id);
+            this.loaded = true;
+        });
     },
 };
 </script>

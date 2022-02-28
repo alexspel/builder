@@ -6,16 +6,16 @@
         <v-card-text>
             <v-text-field
                 label="Название проект"
-                v-model="project.name"
+                v-model="projectName"
                 outlined
                 clearable
                 prepend-icon="mdi-alpha-t-box"
             />
             <v-combobox
                 label="Статус проекта"
-                :items="statuses"
+                :items="getStatuses"
                 return-object
-                v-model="project.status"
+                v-model="projectStatus"
                 item-text="name"
                 outlined
                 clearable
@@ -24,16 +24,17 @@
             />
             <v-combobox
                 label="Руководитель"
-                :items="users"
-                item-text="name"
+                :items="getUsers"
                 return-object
+                v-model="projectManager"
+                item-text="name"
                 outlined
                 clearable
                 item-key="id"
                 prepend-icon="mdi-card-account-details"
             />
             <v-combobox
-                :items="companies"
+                :items="getCompanies"
                 label="Контрагент"
                 item-text="name"
                 return-object
@@ -52,7 +53,7 @@
                     <div class="text-h6">Контакты контрагента</div>
                 </div>
                 <v-dialog
-                    v-model="dialogPartnerContact"
+                    v-model="projectPartnerContactDialog"
                     persistent
                     :overlay="false"
                     max-width="500px"
@@ -73,7 +74,7 @@
                                 color="error"
                                 class="ml-4 mb-2"
                                 @click="deleteSelectedPartnerContacts"
-                                :disabled="partnerContactsSelected.length == 0"
+                                :disabled="projectPartnerContacts.length == 0"
                             >
                                 Удалить выбранне
                             </v-btn>
@@ -85,19 +86,19 @@
                         </v-card-title>
                         <v-card-text>
                             <v-combobox
-                                :items="users"
+                                :items="getUsers"
                                 Label="Контакт"
                                 item-text="name"
                                 return-object
                                 clearable
                                 item-key="id"
-                                v-model="contactUser"
+                                v-model="projectContactUser"
                             />
                             <v-textarea
                                 label="По каким вопросам"
                                 outlined
                                 clearable
-                                v-model="contactValue"
+                                v-model="projectContactPhone"
                                 prepend-icon="mdi-comment"
                             />
                         </v-card-text>
@@ -120,10 +121,10 @@
             <v-data-table
                 :headers="contactHeaders"
                 dense
-                :items="partnerContacts"
+                :items="projectPartnerContacts"
                 class="elevation-1 mb-6"
                 show-select
-                v-model="partnerContactsSelected"
+                v-model="projectPartnerContacts"
                 outlined
                 item-key="id"
             >
@@ -137,7 +138,7 @@
                     <div class="text-h6">Документы объекта</div>
                 </div>
                 <v-dialog
-                    v-model="dialogDocument"
+                    v-model="projectDocumentDialog"
                     persistent
                     :overlay="false"
                     max-width="500px"
@@ -158,7 +159,7 @@
                                 color="error"
                                 class="ml-4 mb-2"
                                 @click="deleteSelectedDocuments"
-                                :disabled="documentsSelected.length == 0"
+                                :disabled="projectDocumentsSelected.length == 0"
                             >
                                 Удалить выбранне
                             </v-btn>
@@ -170,17 +171,17 @@
                         </v-card-title>
                         <v-card-text>
                             <v-combobox
-                                :items="documentTypes"
+                                :items="getDocumentTypes"
                                 Label="Сотрудник"
                                 item-text="name"
                                 return-object
                                 clearable
                                 item-key="id"
-                                v-model="documentType"
+                                v-model="projectDocumentType"
                             />
                             <v-text-field
                                 label="Ссылка на документ"
-                                v-model="documentUrl"
+                                v-model="projectDocumentUrl"
                                 clearable
                             />
                         </v-card-text>
@@ -201,16 +202,16 @@
             </div>
             <v-data-table
                 :headers="documentHeaders"
-                :items="documents"
+                :items="projectDocuments"
                 class="elevation-1 mb-6"
                 show-select
                 item-key="id"
-                v-model="documentsSelected"
+                v-model="projectDocumentsSelected"
             >
             </v-data-table>
             <v-text-field
                 label="Адрес объекта"
-                v-model="project.name"
+                v-model="projectAddress"
                 clearable
                 outlined
                 prepend-icon="mdi-map-marker"
@@ -225,7 +226,7 @@
                     <div class="text-h6">Контакты на объекте</div>
                 </div>
                 <v-dialog
-                    v-model="dialogContact"
+                    v-model="projectContactDialog"
                     persistent
                     :overlay="false"
                     max-width="500px"
@@ -246,7 +247,7 @@
                                 color="error"
                                 class="ml-4 mb-2"
                                 @click="deleteSelectedContacts"
-                                :disabled="contactsSelected.length == 0"
+                                :disabled="projectContactsSelected.length == 0"
                             >
                                 Удалить выбранне
                             </v-btn>
@@ -258,17 +259,17 @@
                         </v-card-title>
                         <v-card-text>
                             <v-combobox
-                                :items="users"
+                                :items="getUsers"
                                 Label="Сотрудник"
                                 item-text="name"
                                 return-object
                                 item-key="id"
-                                v-model="contactUser"
+                                v-model="projectContactUser"
                                 clearable
                             />
                             <v-text-field
                                 label="Контактный телефон"
-                                v-model="contactValue"
+                                v-model="projectContactPhone"
                                 clearable
                             />
                         </v-card-text>
@@ -286,35 +287,40 @@
             </div>
             <v-data-table
                 :headers="contactHeaders"
-                :items="contacts"
+                :items="projectContacts"
                 class="elevation-1 mb-6"
                 show-select
                 item-key="id"
-                v-model="contactsSelected"
+                v-model="projectContactsSelected"
             >
             </v-data-table>
             <v-textarea
                 label="Комментарий"
-                v-model="project.comment"
+                v-model="projectComment"
                 outlined
                 clearable
                 prepend-icon="mdi-comment"
             />
         </v-card-text>
         <v-card-actions>
-            <v-btn v-if="project.id === null" color="primary"> Создать </v-btn>
-            <v-btn v-if="project.id !== null" color="primary" class="mr-4">
-                Сохранить
-            </v-btn>
-            <v-btn v-if="project.id !== null" color="error" class="mr-4"
-                >Удалить</v-btn
-            >
+            <v-btn color="primary" @click="save"> Создать </v-btn>
+            <v-btn color="primary" class="mr-4"> Сохранить </v-btn>
+            <v-btn color="error" class="mr-4">Удалить</v-btn>
         </v-card-actions>
     </v-card>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
+    computed: {
+        ...mapGetters([
+            "getCompanies",
+            "getDocumentTypes",
+            "getStatuses",
+            "getUsers",
+        ]),
+    },
     methods: {
         getMaxId(arr) {
             if (arr.length <= 0) return 0;
@@ -322,97 +328,112 @@ export default {
         },
         addDocument() {
             var document = {
-                id: this.getMaxId(this.documents) + 1,
-                type: this.documentType,
-                url: this.documentUrl,
+                id: this.getMaxId(this.projectDocuments) + 1,
+                type: this.projectDocumentType,
+                url: this.projectDocumentUrl,
             };
-            this.documents.push(document);
-            this.documentUrl = "";
-            // this.dialogDocument = false;
+            this.projectDocuments.push(document);
+            this.projectDocumentUrl = "";
         },
         cancelDocument() {
-            this.documentType = null;
-            this.documentUrl = "";
-            this.dialogDocument = false;
+            this.projectDocumentType = this.defaultDocumentType;
+            this.projectDocumentUrl = "";
+            this.projectDocumentDialog = false;
         },
         addContact() {
             var contact = {
-                id: this.getMaxId(this.contacts) + 1,
-                user: this.contactUser,
-                value: this.contactValue,
+                id: this.getMaxId(this.projectContacts) + 1,
+                user: this.projectContactUser,
+                value: this.projectContactPhone,
             };
-            this.contacts.push(contact);
-            this.contactUser = null;
+            this.projectContacts.push(contact);
+            this.projectContactUser = this.defaultUser;
             this.contactValue = "";
         },
         cancelContact() {
-            this.contactUser = null;
-            this.contactValue = "";
-            this.dialogContact = false;
-            this.dialogPartnerContact = false;
+            this.projectContactUser = this.defaultUser;
+            this.projectContactPhone = "";
+            this.projectContactDialog = false;
+            this.projectPartnerContactDialog = false;
         },
         addPartnerContact() {
             var contact = {
-                id: this.getMaxId(this.partnerContacts) + 1,
-                user: this.contactUser,
-                value: this.contactValue,
+                id: this.getMaxId(this.projectPartnerContacts) + 1,
+                user: this.projectContactUser,
+                value: this.projectContactPhone,
             };
-            this.partnerContacts.push(contact);
-            this.contactUser = null;
-            this.contactValue = "";
-            // this.dialogContact = false;
+            this.projectPartnerContacts.push(contact);
+            this.projectContactUser = this.defaultUser;
+            this.projectContactPhone = "";
         },
         deleteSelectedDocuments() {
-            this.documentsSelected.forEach((document) => {
-                this.documents.splice(this.documents.indexOf(document), 1);
-            });
-        },
-        deleteSelectedContacts() {
-            this.contactsSelected.forEach((contact) => {
-                this.contacts.splice(this.contacts.indexOf(contact), 1);
-            });
-        },
-        deleteSelectedPartnerContacts() {
-            this.partnerContactsSelected.forEach((contact) => {
-                this.partnerContacts.splice(
-                    this.partnerContacts.indexOf(contact),
+            this.projectDocumentsSelected.forEach((document) => {
+                this.projectDocuments.splice(
+                    this.projectDocuments.indexOf(document),
                     1
                 );
             });
         },
+        deleteSelectedContacts() {
+            this.projectContactsSelected.forEach((contact) => {
+                this.projectContacts.splice(
+                    this.projectContacts.indexOf(contact),
+                    1
+                );
+            });
+        },
+        deleteSelectedPartnerContacts() {
+            this.projectPartnerContactsSelected.forEach((contact) => {
+                this.projectPartnerContacts.splice(
+                    this.projectPartnerContacts.indexOf(contact),
+                    1
+                );
+            });
+        },
+        save() {
+            let project = {
+                name: this.projectName,
+                comment: this.projectComment,
+                statusID: this.projectStatus.id,
+                authorID: this.projectManager.id,
+            };
+            this.$store.dispatch("saveProject", project).then((path) => {
+                document.location = path;
+            });
+        },
     },
     data: () => ({
-        documentType: null,
-        documentUrl: "",
-        contactUser: null,
-        contactValue: "",
-        statuses: [],
-        companies: [],
-        documents: [],
-        documentsSelected: [],
-        contacts: [],
-        contactsSelected: [],
-        partnerContacts: [],
-        partnerContactsSelected: [],
-        users: [],
-        project: {
-            id: null,
-            name: null,
-            status: null,
-            comment: null,
-            author: {
-                id: null,
-                name: "",
-            },
-        },
-        dialogDocument: false,
-        dialogContact: false,
-        dialogPartnerContact: false,
-        documentTypes: [
-            { id: 1, name: "Договор" },
-            { id: 2, name: "Смета" },
-            { id: 3, name: "Расчет стоимости" },
-        ],
+        projectName: "",
+        projectComment: null,
+        projectAddress: null,
+        projectStatus: { id: null, name: null },
+        projectManager: { id: null, name: null },
+        projectPartner: { id: null, name: null },
+
+        projectPartnerContacts: [],
+        projectPartnerContactsSelected: [],
+
+        projectDocuments: [],
+        projectDocumentsSelected: [],
+
+        projectContacts: [],
+        projectContactsSelected: [],
+
+        projectPartnerContactDialog: false,
+        projectPartnerContactUser: { id: null, name: null },
+        projectPartnerContactPhone: null,
+
+        projectContactDialog: false,
+        projectContactUser: { id: null, name: null },
+        projectContactPhone: null,
+
+        projectDocumentDialog: false,
+        projectDocumentType: { id: null, name: null },
+        projectDocumentUrl: "",
+
+        defaultUser: { id: null, name: null },
+        defaultDocumentType: { id: null, name: null },
+
         contactHeaders: [
             { text: "Сотрудник", value: "user.name" },
             { text: "Контакт", value: "value" },
@@ -422,19 +443,10 @@ export default {
             { text: "Ссылка на документ", value: "url" },
         ],
     }),
-    async created() {
-        var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/project_statuses.json"
-        );
-        this.statuses = await response.json();
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/users/users.json"
-        );
-        this.users = await response.json();
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/companies.json"
-        );
-        this.companies = await response.json();
+    created() {
+        this.$store.dispatch("loadStatuses");
+        this.$store.dispatch("loadCompanies");
+        this.$store.dispatch("loadUsers");
     },
 };
 </script>

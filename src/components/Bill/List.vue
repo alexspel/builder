@@ -3,22 +3,22 @@
         <v-card-title>
             <h2 class="text-h2 mb-4">Реестр счетов</h2>
         </v-card-title>
+        <!-- show-expand -->
         <v-card-text>
             <v-data-table
                 :headers="billListHeaders"
-                :items="bills"
-                :expanded.sync="expanded"
-                show-expand
+                :items="getBills"
                 item-key="id"
                 class="blue-grey lighten-5"
+                hide-default-footer
             >
                 <template v-slot:item.id="{ item }">
+                    <td>{{ getBills.indexOf(item) + 1 }}</td>
+                </template>
+                <template v-slot:item.name="{ item }">
                     <td>
-                        <router-link
-                            class="mr-4"
-                            :to="`/bill/view/${item.id}`"
-                        >
-                            {{ item.id }}
+                        <router-link class="mr-4" :to="`/bill/view/${item.id}`">
+                            {{ item.name }}
                         </router-link>
                     </td>
                 </template>
@@ -26,47 +26,32 @@
                     <td>
                         <router-link
                             class="mr-4"
-                            :to="`/project/view/${item.project.id}`"
+                            :to="`/project/view/${item.projectID}`"
                         >
-                            {{ item.project.name }}
+                            {{ getProjectById(item.projectID).name }}
                         </router-link>
                     </td>
                 </template>
                 <template v-slot:item.partner="{ item }">
                     <td>
-                        {{ item.partner.name }}
+                        <router-link
+                            class="mr-4"
+                            :to="`/project/view/${item.companyID}`"
+                        >
+                            {{ getCompanyById(item.companyID).name }}
+                        </router-link>
                     </td>
                 </template>
                 <template v-slot:item.sum="{ item }">
-                    <td>
-                        {{
-                            item.positions
-                                .map((p) => +p.value * +p.price)
-                                .reduce((p, c) => p + c)
-                                .toLocaleString()
-                        }}
-                    </td>
-                </template>
-                <template v-slot:expanded-item="{ headers, item }">
-                    <td :colspan="headers.length" style="padding: 0">
-                        <v-data-table
-                            :items="item.positions"
-                            :headers="positionHeaders"
-                        >
-                        </v-data-table>
-                    </td>
-                </template>
-                <template slot="body.append">
-                    <tr class="pink--text">
-                        <th class="title"></th>
-                        <th class="title">Итого</th>
-                        <th class="title"></th>
-                        <th class="title"></th>
-                        <th class="title"></th>
-                        <th class="title">{{ sumField("protein") }}</th>
-                    </tr>
+                    <td>{{ item.id }}</td>
                 </template>
             </v-data-table>
+            <v-pagination
+                v-if="total > itemsPerPage"
+                v-model="page"
+                :length="length"
+                @input="next"
+            />
         </v-card-text>
         <v-card-actions class="pa-4">
             <router-link
@@ -80,27 +65,21 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
-    data: () => ({
-        expanded: [],
-        company: { id: null, name: "" },
-        companies: [],
-        bills: [],
-        billListHeaders: [
-            { text: "Номер счета", value: "id" },
-            { text: "Проект", value: "project" },
-            { text: "Проект", value: "project.status" },
-            { text: "Контрагент", value: "partner" },
-            { text: "Сумма, руб.", value: "sum" },
-        ],
-        positionHeaders: [
-            { text: "Наименование", value: "good.name" },
-            { text: "Количество", value: "value" },
-            { text: "Цена за ед, руб", value: "price" },
-            { text: "Ед.изм", value: "good.measure" },
-            { text: "Дата поставки", value: "date" },
-        ],
-    }),
+    computed: {
+        ...mapGetters([
+            "getBills",
+            "getProjectById",
+            "getStatusById",
+            "getGoodById",
+            "getPositionsByRequestId",
+            "getCompanyById",
+        ]),
+        length() {
+            return Math.ceil(this.total / this.itemsPerPage);
+        },
+    },
     methods: {
         sumField() {
             if (this.bills.length <= 0) return 0;
@@ -114,23 +93,37 @@ export default {
                 )
                 .reduce((xx, yy) => xx + yy);
         },
+        next(page) {
+            this.$store.dispatch("loadProjects", page, this.applyingPagination);
+        },
+        applyingPagination(a) {
+            this.page = a.page;
+            this.itemsPerPage = a.perPage;
+            this.total = a.total;
+            this.loaded = true;
+        },
     },
-    async created() {
-        var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/main/data/companies.json"
-        );
-        this.companies = await response.json();
-
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/bills.json"
-        );
-        this.bills = await response.json();
-        this.bills.forEach((bill) => {
-            var idx = this.bills.indexOf(bill);
-            this.bills[idx].partner =
-                this.companies.find((c) => +c.id === +bill.id) || this.company;
-        });
-        console.log(this.bills);
+    data: () => ({
+        page: 1,
+        itemsPerPage: 1,
+        total: 1,
+        search: "",
+        loaded: false,
+        expanded: [],
+        billListHeaders: [
+            { text: "№ п/п", value: "id" },
+            { text: "Название", value: "name" },
+            { text: "Проект", value: "project" },
+            { text: "Контрагент", value: "partner" },
+            // { text: "Сумма, руб.", value: "sum" },
+        ],
+    }),
+    mounted() {
+        this.$store.dispatch("loadStatuses");
+        this.$store.dispatch("loadCompanies");
+        this.$store.dispatch("loadUsers");
+        this.$store.dispatch("loadProjects");
+        this.$store.dispatch("loadBills").then(this.pagination);
     },
 };
 </script>

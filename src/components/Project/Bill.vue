@@ -1,19 +1,27 @@
 <template>
     <v-card class="pa-2" outlined>
         <v-card-title>
-            <h2 class="text-h2 mb-4">Реестр счетов проекта</h2>
+            <h2 class="text-h2 mb-4">
+                Реестр счетов проекта
+                <router-link :to="`/project/view/${project.id}`">
+                    {{ project.name }}
+                </router-link>
+            </h2>
         </v-card-title>
         <v-card-text>
             <v-data-table
                 :headers="requestHeaders"
-                :items="requests"
-                :expanded.sync="expanded"
-                show-expand
+                :items="bills"
                 item-key="id"
                 class="blue-grey lighten-5"
             >
                 <template #item.index="{ item }">
-                    <td>{{ requests.indexOf(item) + 1 }}</td>
+                    <td>
+                        {{
+                            getBillsByProjectId(item.projectID).indexOf(item) +
+                            1
+                        }}
+                    </td>
                 </template>
                 <template v-slot:item.name="{ item }">
                     <td>
@@ -26,71 +34,75 @@
                     <td>
                         <router-link
                             class="mr-4"
-                            :to="`/project/view/${item.project.id}`"
+                            :to="`/project/view/${item.projectID}`"
                         >
-                            {{ item.project.name }}
+                            {{ getProjectById(item.projectID).name }}
                         </router-link>
                     </td>
                 </template>
                 <template v-slot:item.partner="{ item }">
                     <td>
-                        {{ item.partner.name }}
+                        {{ getCompanyById(item.companyID).name }}
                     </td>
                 </template>
                 <template v-slot:item.positions="{ item }">
                     <td>
-                        {{ item.positions.length }}
+                        {{ item.id }}
                     </td>
                 </template>
                 <template v-slot:item.sum="{ item }">
                     <td>
-                        {{
-                            item.positions
-                                .map((p) => +p.value * +p.price)
-                                .reduce((p, c) => p + c)
-                                .toLocaleString()
-                        }}
+                        {{ item.id }}
                     </td>
-                </template>
-                <template v-slot:expanded-item="{ headers, item }">
-                    <td :colspan="headers.length" style="padding: 0">
-                        <v-data-table
-                            :items="item.positions"
-                            :headers="positionHeaders"
-                        >
-                        </v-data-table>
-                    </td>
-                </template>
-                <template slot="body.append">
-                    <tr class="pink--text">
-                        <th class="title"></th>
-                        <th class="title">Итого</th>
-                        <th class="title"></th>
-                        <th class="title"></th>
-                        <th class="title"></th>
-                        <th class="title">{{ sumField("protein") }}</th>
-                    </tr>
                 </template>
             </v-data-table>
         </v-card-text>
+        <v-card-actions class="pa-4">
+            <router-link
+                style="text-decoration: none; color: inherit"
+                to="/bill/create"
+            >
+                <v-btn color="primary">Создать счет</v-btn>
+            </router-link>
+        </v-card-actions>
     </v-card>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
+    computed: {
+        ...mapGetters([
+            "getRequests",
+            "getProjectById",
+            "getStatusById",
+            "getUserById",
+            "getGoodById",
+            "getCompanyById",
+            "getPositionsByRequestId",
+            "getBillCost",
+            "getBillsByProjectId",
+        ]),
+    },
     methods: {
-        sumField() {
-            return 0;
+        view() {
+            console.log(this.$store.state);
         },
     },
     data: () => ({
-        expanded:[],
-        requests:[],
+        project: {
+            id: null,
+            name: null,
+        },
+        expanded: [],
+        requests: [],
+        bills: [],
         requestHeaders: [
             { text: "№ п/п", value: "index" },
             { text: "Счет", value: "name" },
             { text: "Проект", value: "project" },
             { text: "Количество позиций", value: "positions" },
+            { text: "Контрагент", value: "partner" },
         ],
         positionHeaders: [
             { text: "№ п/п", value: "index" },
@@ -103,14 +115,16 @@ export default {
             { text: "Доставлено", value: "delivered" },
         ],
     }),
-    async created() {
-        var id = +this.$route.params.id;
-        var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/main/data/requests.json"
-        );
-        var requests = await response.json();
-        this.requests = requests.filter((r) => +r.project.id === id);
-        console.log(this.requests);
+    created() {
+        this.$store.dispatch("loadProjects");
+        this.$store.dispatch("loadGoods");
+        this.$store.dispatch("loadBills");
+        this.$store.dispatch("loadStatuses");
+        this.$store.dispatch("loadUsers");
+        this.$store.dispatch("loadCompanies");
+        this.project = this.getProjectById(this.$route.params.id);
+        this.$store.dispatch("loadRequestsByProjectId", this.$route.params.id);
+        this.bills = this.getBillsByProjectId(this.$route.params.id);
     },
 };
 </script>
