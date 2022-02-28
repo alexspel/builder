@@ -15,6 +15,7 @@ import RequestCard from "../components/Request/Card";
 import RequestForm from "../components/Request/Form";
 import RequestList from "../components/Request/List";
 
+import PaymentCard from "../components/Payment/Card";
 import PaymentList from "../components/Payment/List";
 
 Vue.use(VueRouter);
@@ -83,6 +84,11 @@ const routes = [
         path: "/payment/list",
         name: "PaymentList",
         component: PaymentList,
+    },
+    {
+        path: "/payment/view/:id",
+        name: "PaymentCard",
+        component: PaymentCard,
     },
 ];
 

@@ -8,32 +8,51 @@
                 class="elevation-1"
                 pagination.sync="pagination"
                 item-key="id"
+                hide-default-footer
             >
+                <template v-slot:item.id="{ item }">
+                    <td>
+                        <router-link :to="`/payment/view/${item.id}`">
+                            {{ item.id }}
+                        </router-link>
+                    </td>
+                </template>
                 <template v-slot:item.project="{ item }">
                     <td>
                         <router-link :to="`/project/view/${item.project}`">
-                            {{ getItemById(item.project, projects) }}
+                            {{ item.projectID }}
                         </router-link>
                     </td>
                 </template>
                 <template v-slot:item.bill="{ item }">
                     <td>
-                        <router-link :to="`/bill/view/${item.bill}`">
+                        <router-link :to="`/bill/view/${item.billID}`">
                             Счет
                         </router-link>
                     </td>
                 </template>
-                <template v-slot:item.partner="{ item }">
+                <template v-slot:item.date="{ item }">
                     <td>
-                        <router-link :to="`/company/view/${item.partner}`">
-                            {{ getItemById(item.partner, companies) }}
-                        </router-link>
+                        {{ new Date(item.payDate).toLocaleDateString() }}
                     </td>
                 </template>
-                <template v-slot:item.amount="{ item }">
-                    <td>{{ item.amount.toLocaleString() }}</td>
+                <template v-slot:item.sum="{ item }">
+                    <td>
+                        {{ item.sumVal.toLocaleString() }}
+                    </td>
+                </template>
+                <template v-slot:item.status="{ item }">
+                    <td>
+                        {{ getStatusById(item.statusID).name }}
+                    </td>
                 </template>
             </v-data-table>
+            <v-pagination
+                v-if="total > itemsPerPage"
+                v-model="page"
+                :length="length"
+                @input="next"
+            />
         </v-card-text>
         <v-card-actions class="pa-4">
             <router-link
@@ -47,51 +66,57 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
+    computed: {
+        ...mapGetters([
+            "getBills",
+            "getProjectById",
+            "getStatusById",
+            "getPositionsByRequestId",
+            "getCompanyById",
+            "getPayments",
+        ]),
+    },
     methods: {
-        getItemById(id, arr) {
-            var p = arr.find((p) => +p.id == +id);
-            if (p) {
-                return p.name;
-            }
-            return id;
+        next(page) {
+            this.$store.dispatch("loadProjects", page, this.applyingPagination);
+        },
+        applyingPagination(a) {
+            this.page = a.page;
+            this.itemsPerPage = a.perPage;
+            this.total = a.total;
+            this.loaded = true;
         },
     },
     data: () => ({
-        bills: [],
-        companies: [],
+        page: 1,
+        itemsPerPage: 1,
+        total: 1,
+        loaded: false,
         payments: [],
         paymentHeaders: [
-            { text: "Номер заявки", value: "id" },
-            { text: "Проект", value: "project" },
+            { text: "ID платежа", value: "id" },
             { text: "Счет", value: "bill" },
-            { text: "Контрагент", value: "partner" },
-            { text: "Дата", value: "date" },
-            { text: "Сумма, руб.", value: "amount" },
+            { text: "Проект", value: "project" },
+            { text: "Дата платежа", value: "date" },
+            { text: "Сумма платежа", value: "sum" },
             { text: "Статус", value: "status" },
         ],
         projects: [],
     }),
-    async created() {
-        var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/payments.json"
-        );
-        this.payments = await response.json();
-
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"
-        );
-        this.projects = await response.json();
-
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/bills.json"
-        );
-        this.bills = await response.json();
-
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/companies.json"
-        );
-        this.companies = await response.json();
+    created() {
+        Promise.all([
+            this.$store.dispatch("loadBills"),
+            this.$store.dispatch("loadProjects"),
+            this.$store.dispatch("loadPayments"),
+        ])
+            .then((e) => {
+                this.applyingPagination(e);
+            })
+            .then(() => {
+                this.payments = this.getPayments;
+            });
     },
 };
 </script>

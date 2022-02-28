@@ -5,39 +5,36 @@
                 <h2 class="text-h2 mb-4">Создание заявки</h2>
                 <v-combobox
                     label="Выберите проект"
-                    :items="projects"
+                    :items="getProjects"
+                    v-model="requestProject"
                     item-text="name"
                     return-object
                 />
 
-                <v-text-field
-                    label="Названеи заявки"
-                    v-model="requestName" 
-                />
-
-                <v-text-field
+                <v-text-field label="Названеи заявки" v-model="requestName" />
+                <v-combobox
                     label="Статус заявки"
+                    :items="getProjects"
                     v-model="requestStatus"
                     disabled
+                    item-text="name"
                     readonly
+                    return-object
                 />
 
                 <v-data-table
                     :headers="positionHeaders"
-                    :items="positions"
+                    :items="requestPositions"
                     dense
                     class="elevation-1 row-pointer"
-                    :search="search"
                     item-key="id"
                 >
                     <template v-slot:top>
                         <div class="d-flex justify-space-between">
-                            <span class="text-h5 mb-4"
-                                >Позиции заявки</span
-                            >
+                            <span class="text-h5 mb-4">Позиции заявки</span>
                             <div>
                                 <v-dialog
-                                    v-model="dialogEdit"
+                                    v-model="positionDialog"
                                     max-width="700px"
                                 >
                                     <template v-slot:activator="{ on, attrs }">
@@ -52,11 +49,13 @@
                                     </template>
                                     <v-card>
                                         <v-card-title>
-                                            <span class="text-h5">{{
-                                                editedIndex === -1
-                                                    ? "Cоздание"
-                                                    : "Редактирование"
-                                            }}</span>
+                                            <span class="text-h5">
+                                                {{
+                                                    positionEditedIndex === -1
+                                                        ? "Cоздание"
+                                                        : "Редактирование"
+                                                }}
+                                            </span>
                                         </v-card-title>
 
                                         <v-card-text>
@@ -65,30 +64,61 @@
                                                     <v-col
                                                         cols="12"
                                                         sm="6"
-                                                        md="4"
+                                                        md="6"
                                                     >
-                                                        <v-combobox
-                                                            :items="goods"
-                                                            item-text="name"
-                                                            label="Выберите позицию"
-                                                            v-model="
-                                                                selectedGood
-                                                            "
-                                                            @change="
-                                                                onChangeGood(
-                                                                    $event
-                                                                )
-                                                            "
-                                                        />
+                                                        <v-list dense>
+                                                            <v-subheader>
+                                                                Категории
+                                                                товаров
+                                                            </v-subheader>
+                                                            <v-list-item-group
+                                                                v-model="
+                                                                    positionCategory
+                                                                "
+                                                                color="primary"
+                                                            >
+                                                                <v-list-item
+                                                                    v-for="(
+                                                                        item, i
+                                                                    ) in getCategories"
+                                                                    :key="i"
+                                                                >
+                                                                    <v-list-item-content>
+                                                                        <v-list-item-title
+                                                                            v-text="
+                                                                                item.name
+                                                                            "
+                                                                        ></v-list-item-title>
+                                                                    </v-list-item-content>
+                                                                </v-list-item>
+                                                            </v-list-item-group>
+                                                        </v-list>
                                                     </v-col>
                                                     <v-col
                                                         cols="12"
                                                         sm="6"
-                                                        md="4"
+                                                        md="6"
+                                                    >
+                                                        <v-combobox
+                                                            :items="getGoods"
+                                                            item-text="name"
+                                                            label="Выберите позицию"
+                                                            v-model="
+                                                                positionGood
+                                                            "
+                                                            return-object
+                                                        />
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row>
+                                                    <v-col
+                                                        cols="12"
+                                                        sm="6"
+                                                        md="6"
                                                     >
                                                         <v-text-field
                                                             v-model="
-                                                                editedPosition.value
+                                                                positionValue
                                                             "
                                                             :label="nameLabel"
                                                             type="number"
@@ -97,10 +127,12 @@
                                                     <v-col
                                                         cols="12"
                                                         sm="6"
-                                                        md="4"
+                                                        md="6"
                                                     >
                                                         <v-menu
-                                                            v-model="dateShow"
+                                                            v-model="
+                                                                positionDateDialog
+                                                            "
                                                             :close-on-content-click="
                                                                 false
                                                             "
@@ -117,7 +149,7 @@
                                                             >
                                                                 <v-text-field
                                                                     v-model="
-                                                                        editedPosition.date
+                                                                        positionDate
                                                                     "
                                                                     label="Необходимая дата доставки"
                                                                     readonly
@@ -129,10 +161,10 @@
                                                             </template>
                                                             <v-date-picker
                                                                 v-model="
-                                                                    editedPosition.date
+                                                                    positionDate
                                                                 "
                                                                 @input="
-                                                                    dateShow = false
+                                                                    positionDateDialog = false
                                                                 "
                                                                 locale="ru-ru"
                                                                 :weekday-format="
@@ -141,14 +173,16 @@
                                                             />
                                                         </v-menu>
                                                     </v-col>
+                                                </v-row>
+                                                <v-row>
                                                     <v-col
                                                         cols="12"
                                                         sm="6"
-                                                        md="4"
+                                                        md="6"
                                                     >
                                                         <v-text-field
                                                             v-model="
-                                                                editedPosition.comment
+                                                                positionComment
                                                             "
                                                             label="Комментарий"
                                                             name="comment"
@@ -158,13 +192,13 @@
                                                     <v-col
                                                         cols="12"
                                                         sm="6"
-                                                        md="4"
+                                                        md="6"
                                                     >
                                                         <v-select
                                                             name="manager"
-                                                            :items="managers"
+                                                            :items="getUsers"
                                                             v-model="
-                                                                selectedManager
+                                                                positionManager
                                                             "
                                                             return-object
                                                             item-text="name"
@@ -209,15 +243,17 @@
                                                 text
                                                 outlined
                                                 @click="deleteItemConfirm"
-                                                >Да</v-btn
                                             >
+                                                Да
+                                            </v-btn>
                                             <v-btn
                                                 color="blue darken-1"
                                                 text
                                                 outlined
                                                 @click="closeDelete"
-                                                >Отмена</v-btn
                                             >
+                                                Отмена
+                                            </v-btn>
                                             <v-spacer></v-spacer>
                                         </v-card-actions>
                                     </v-card>
@@ -226,15 +262,10 @@
                         </div>
                     </template>
                     <template #item.index="{ item }">
-                        {{ positions.indexOf(item) + 1 }}
+                        {{ requestPositions.indexOf(item) + 1 }}
                     </template>
-
                     <template v-slot:item.value="{ item }">
-                        <td
-                            :class="
-                                item.value === null ? 'red white--text' : ''
-                            "
-                        >
+                        <td :class="+item.value === 0 ? 'red white--text' : ''">
                             {{
                                 item.value === null
                                     ? "Количество не заполнено"
@@ -249,21 +280,18 @@
                             {{
                                 item.date === null
                                     ? "Дата не заполнена"
-                                    : item.date
+                                    : new Date(item.date).toLocaleDateString()
                             }}
                         </td>
                     </template>
-                    <template v-slot:item.price="{ item }">
-                        <td
-                            :class="
-                                item.price === null ? 'red white--text' : ''
-                            "
-                        >
-                            {{
-                                item.price === null
-                                    ? "Цена не заполнена"
-                                    : +item.price
-                            }}
+                    <template v-slot:item.good="{ item }">
+                        <td>
+                            {{ item.good.name }}
+                        </td>
+                    </template>
+                    <template v-slot:item.measure="{ item }">
+                        <td>
+                            {{ item.good.measure }}
                         </td>
                     </template>
                     <template v-slot:item.actions="{ item }">
@@ -277,7 +305,11 @@
                 </v-data-table>
             </v-card-text>
             <v-card-actions>
-                <v-btn color="success" :disabled="positions.length == 0">
+                <v-btn
+                    color="success"
+                    :disabled="requestPositions.length == 0 && !true"
+                    @click="saveRequest"
+                >
                     Сформировать заявку
                 </v-btn>
             </v-card-actions>
@@ -286,27 +318,50 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
+    computed: {
+        ...mapGetters([
+            "getCategories",
+            "getUsers",
+            "getGoods",
+            "getProjects",
+            "getGoodById",
+            "getStatusById",
+            "getCompanyById",
+            "getUserById",
+            "getProjectById",
+            "getPositionsByRequestId",
+        ]),
+    },
     methods: {
+        view() {
+            console.log(this.$store.state.projects);
+        },
         editItem(item) {
-            this.editedIndex = this.positions.indexOf(item);
-            this.editedPosition = Object.assign({}, item);
-            this.dialogEdit = true;
+            this.editedIndex = this.requestPositions.indexOf(item);
+            this.positionCategory = item.category;
+            this.positionGood = item.good;
+            this.positionValue = item.value;
+            this.positionDate = item.date;
+            this.positionComment = item.comment;
+            this.positionManager = item.manager;
         },
 
         deleteItem(item) {
-            this.editedIndex = this.positions.indexOf(item);
+            this.editedIndex = this.requestPositions.indexOf(item);
             this.editedPosition = Object.assign({}, item);
             this.dialogDelete = true;
         },
 
         deleteItemConfirm() {
-            this.positions.splice(this.editedIndex, 1);
+            this.requestPositions.splice(this.editedIndex, 1);
             this.closeDelete();
         },
 
         close() {
-            this.dialogEdit = false;
+            this.positionDialog = false;
             this.$nextTick(() => {
                 this.editedPosition = Object.assign({}, this.defaultPosition);
                 this.editedIndex = -1;
@@ -316,29 +371,48 @@ export default {
         closeDelete() {
             this.dialogDelete = false;
             this.$nextTick(() => {
-                this.editedPosition = Object.assign({}, this.defaultPosition);
                 this.editedIndex = -1;
+                this.positionCategory = this.defaultCategory;
+                this.positionGood = this.defaultGood;
+                this.positionValue = null;
+                this.positionDate = null;
+                this.positionComment = null;
+                this.positionManager = this.defaultManger;
             });
         },
 
         save() {
+            var position = Object.assign(
+                {},
+                {
+                    category: this.positionCategory,
+                    good: this.positionGood,
+                    value: this.positionValue,
+                    manager: this.positionManager,
+                    comment: this.positionComment,
+                    date: this.positionDate,
+                }
+            );
             if (this.editedIndex > -1) {
                 Object.assign(
-                    this.positions[this.editedIndex],
-                    Object.assign(this.editedPosition, {
-                        good: this.selectedGood,
-                        manager: this.selectedManager,
-                    })
+                    this.requestPositions[this.editedIndex],
+                    position
                 );
             } else {
-                this.positions.push(
-                    Object.assign(this.editedPosition, {
-                        good: this.selectedGood,
-                        manager: this.selectedManager,
-                    })
-                );
+                this.requestPositions.push(position);
             }
+
             this.close();
+        },
+        saveRequest() {
+            this.$store.dispatch("saveRequest", {
+                request: {
+                    name: this.requestName,
+                    projectID: this.requestProject.id,
+                    statusID: this.requestStatus.id,
+                    authorID: 1,
+                },
+            });
         },
 
         getCustomDay(date) {
@@ -347,88 +421,54 @@ export default {
             return daysOfWeek[i];
         },
         onChangeGood() {
-            this.nameLabel = `Количество, ${this.selectedGood.measure}`;
-        },
-    },
-    computed: {
-        isFormValid: function () {
-            return this.positions.length > 0 && this.name !== "";
+            this.nameLabel = `Количество, ${this.positionGood.measure}`;
         },
     },
     data: () => ({
-        dateShow: false,
-        search: "",
-        addPositionForm: false,
-        projects: [],
-        selectedGood: {
-            id: null,
-            name: null,
-            measure: null,
-        },
-        selectedManager: {
+        requestProject: {
             id: null,
             name: null,
         },
-        nameLabel: "Количество",
         requestName: null,
-        requestStatus: "В работе",
-        positions: [],
-        dialogEditDateMenuShow: false,
-        dialogEdit: false,
-        dialogDelete: false,
-        editedIndex: -1,
-        selectedProject: {
+        requestStatus: {
             id: null,
             name: null,
         },
-        defaultPosition: {
-            good: {
-                id: null,
-                name: null,
-                measure: null,
-            },
-            value: 0,
-            date: null,
-            comment: null,
-            manager: {
-                id: null,
-                name: null,
-            },
+        requestPositions: [],
+
+        positionGood: {
+            id: null,
+            name: null,
         },
-        editedPosition: {
-            good: {
-                id: null,
-                name: null,
-                measure: null,
-            },
-            value: 0,
-            date: null,
-            comment: null,
-            manager: {
-                id: null,
-                name: null,
-            },
+        positionCategory: { id: null, name: null },
+        positionValue: 0,
+        positionDate: null,
+        positionComment: null,
+        positionManager: {
+            id: null,
+            name: null,
         },
-        goods: [
-            { id: 1, name: "Проволока тонкая", measure: "метров" },
-            { id: 3, name: "Фанера", measure: "листов" },
-            { id: 4, name: "Бетон", measure: "м3" },
-            { id: 2, name: "Проволока толстая", measure: "метров" },
-        ],
+        positionEditedIndex: -1,
+        positionDateDialog: false,
+
+        positionDialog: false,
+
+        dialogDelete: false,
+        nameLabel: "Количество",
+
+        defaultCategory: { id: null, name: null },
+        defaultGood: { id: null, name: null },
+        defaultManger: { id: null, name: null },
+
         positionHeaders: [
             { text: "№ п/п", value: "index" },
-            { text: "Наименование", value: "good.name" },
+            { text: "Наименование", value: "good" },
             { text: "Кол-во", value: "value" },
-            { text: "Ед.изм.", value: "good.measure" },
+            { text: "Ед.изм.", value: "measure" },
             { text: "Необходимая дата поставки", value: "date" },
             { text: "Комментарий", value: "comment" },
             { text: "Ответственный", value: "manager.name" },
             { text: "Действия", value: "actions", sortable: false },
-        ],
-        managers: [
-            { id: 1, name: "Иванов И.И." },
-            { id: 2, name: "Петров П.П." },
-            { id: 3, name: "Сидоров В.В." },
         ],
     }),
     watch: {
@@ -439,16 +479,12 @@ export default {
             val || this.closeDelete();
         },
     },
-    async created() {
-        // var response = await fetch(
-        //     "https://raw.githubusercontent.com/alexspel/builder/main/data/request_statuses.json"
-        // );
-        // this.statuses = await response.json();
-
-        var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"
-        );
-        this.projects = await response.json();
+    created() {
+        this.$store.dispatch("loadProjects");
+        this.$store.dispatch("loadStatuses");
+        this.$store.dispatch("loadGoods");
+        this.$store.dispatch("loadUsers");
+        this.requestStatus = this.getStatusById(1);
     },
 };
 </script>

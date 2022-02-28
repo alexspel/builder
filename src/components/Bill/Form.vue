@@ -9,357 +9,445 @@
                     Проект:
                     <router-link
                         class="ml-2"
-                        :to="'/project/view/' + project.id"
+                        :to="`/project/view/${project.id}`"
                     >
                         {{ project.name }}
                     </router-link>
                 </div>
                 <div class="text-h6 mb-1 font-weight-light">
                     Руководитель:
-                    <router-link class="ml-2" :to="'/user/' + manager.id">
+                    <router-link class="ml-2" :to="`/user/${manager.id}`">
                         {{ manager.name }}
                     </router-link>
                 </div>
             </v-card-text>
         </v-card>
-        <v-card class="pa-2" outlined>
-            <v-card-title>
-                <div class="text-h4 mb-3 font-weight-light">Нераспределенные позиции</div>
-            </v-card-title>
-            <v-card-text>
-                <v-text-field
-                    v-model="searchNotAttachedPositions"
-                    append-icon="mdi-magnify"
-                    label="Поиск"
-                    hide-details
-                    class="my-2"
-                />
-                <v-data-table
-                    :headers="requestPositionsHeaders"
-                    dense
-                    :items="notAttachedPositions"
-                    class="elevation-1 row-pointer"
-                    show-select
-                    :search="searchNotAttachedPositions"
-                    item-key="id"
-                    :loading="!billLoaded"
-                    v-model="notAttachedSelectedPositions"
-                >
-                    <template #item.index="{ item }">
-                        <td>{{ notAttachedPositions.indexOf(item) + 1 }}</td>
-                    </template>
-                    <template v-slot:item.delivered="{ item }">
-                        <td>
-                            <v-icon>
-                                {{
-                                    item.delivered === true
-                                        ? "mdi-checkbox-marked-circle"
-                                        : "mdi-cancel"
-                                }}
-                            </v-icon>
-                        </td>
-                    </template>
-                </v-data-table>
-            </v-card-text>
-            <v-card-actions>
-                <v-btn
-                    color="primary"
-                    :disabled="notAttachedSelectedPositions.length == 0"
-                    @click="addPositionsToBill"
-                >
-                    Добавить в счет
-                </v-btn>
-            </v-card-actions>
-        </v-card>
 
-        <v-card class="pa-2" outlined>
-            <v-card-title>
-                <div class="text-h4 mb-3 font-weight-light">Распределенные позиции</div>
-            </v-card-title>
-            <v-card-text>
-                <v-text-field
-                    v-model="searchAttachedPositions"
-                    append-icon="mdi-magnify"
-                    label="Поиск"
-                    hide-details
-                    class="mb-4"
-                />
-                <v-data-table
-                    :headers="requestPositionsHeaders"
-                    dense
-                    :items="attachedPositions"
-                    class="elevation-1 row-pointer"
-                    :search="searchAttachedPositions"
-                    item-key="id"
-                    :loading="!billLoaded"
-                >
-                    <template #item.index="{ item }">
-                        <td>{{ attachedPositions.indexOf(item) + 1 }}</td>
-                    </template>
-                    <template v-slot:item.delivered="{ item }">
-                        <td>
-                            <v-icon>
-                                {{
-                                    item.delivered === true
-                                        ? "mdi-checkbox-marked-circle"
-                                        : "mdi-cancel"
-                                }}
-                            </v-icon>
-                        </td>
-                    </template>
-                </v-data-table>
-            </v-card-text>
-        </v-card>
+        <v-tabs v-model="tab">
+            <v-tab>Распределение позиций</v-tab>
+            <v-tab>Распределенные позиции</v-tab>
+            <v-tab-item :key="0">
+                <v-card class="pa-2" outlined>
+                    <v-card-title>
+                        <div class="text-h6 mb-3 font-weight-light">
+                            Нераспределенные позиции
+                        </div>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-text-field
+                            v-model="searchNotAttachedPositions"
+                            append-icon="mdi-magnify"
+                            label="Поиск"
+                            hide-details
+                            class="my-2"
+                        />
+                        <v-data-table
+                            :headers="requestPositionsHeaders"
+                            dense
+                            :items="notAttachedPositions"
+                            class="elevation-1 row-pointer"
+                            show-select
+                            :search="searchNotAttachedPositions"
+                            item-key="id"
+                            :loading="!billLoaded"
+                            hide-default-footer
+                            v-model="notAttachedSelectedPositions"
+                        >
+                            <template #item.index="{ item }">
+                                <td>
+                                    {{ notAttachedPositions.indexOf(item) + 1 }}
+                                </td>
+                            </template>
+                            <template v-slot:item.delivered="{ item }">
+                                <td>
+                                    <v-icon>
+                                        {{
+                                            item.delivered === true
+                                                ? "mdi-checkbox-marked-circle"
+                                                : "mdi-cancel"
+                                        }}
+                                    </v-icon>
+                                </td>
+                            </template>
+                        </v-data-table>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn
+                            color="primary"
+                            :disabled="notAttachedSelectedPositions.length == 0"
+                            @click="addPositionsToBill"
+                        >
+                            Добавить в счет
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
 
-        <v-card class="pa-2" outlined>
-            <v-card-title>
-                <div class="text-h4 mb-3 font-weight-light">Позиции, добавленные в счет</div>
-            </v-card-title>
-            <v-card-text>
-                <v-combobox
-                    :items="companies"
-                    item-text="name"
-                    label="Выберите поставщика"
-                />
-                <v-text-field
-                    v-model="searchBillPositions"
-                    append-icon="mdi-magnify"
-                    label="Поиск"
-                    hide-details
-                    class="mb-4"
-                />
-                <v-data-table
-                    :headers="billPositionsHeaders"
-                    :items="billPositions"
-                    dense
-                    class="elevation-1 row-pointer"
-                    show-select
-                    :search="searchBillPositions"
-                    item-key="id"
-                >
-                    <template v-slot:top>
-                        <v-dialog v-model="dialogEdit" max-width="50%">
-                            <v-card>
-                                <v-card-title>
-                                    <span class="text-h5">Редактирование</span>
-                                </v-card-title>
+                <v-card class="pa-2" outlined>
+                    <v-card-title>
+                        <div class="text-h6 mb-3 font-weight-light">
+                            Позиции, добавленные в счет
+                        </div>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-combobox
+                            :items="companies"
+                            item-text="name"
+                            label="Поставщик"
+                        />
+                        <v-text-field
+                            v-model="searchBillPositions"
+                            append-icon="mdi-magnify"
+                            label="Поиск"
+                            hide-details
+                            class="mb-4"
+                        />
+                        <v-data-table
+                            :headers="billPositionsHeaders"
+                            :items="billPositions"
+                            dense
+                            class="elevation-1 row-pointer"
+                            show-select
+                            hide-default-footer
+                            :search="searchBillPositions"
+                            item-key="id"
+                            itemsPerPage="-1"
+                        >
+                            <template v-slot:top>
+                                <v-dialog v-model="dialogEdit" max-width="50%">
+                                    <v-card>
+                                        <v-card-title>
+                                            <span class="text-h5"
+                                                >Редактирование</span
+                                            >
+                                        </v-card-title>
 
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field
-                                                    v-model="
-                                                        editedBillPosition
-                                                            .position.good.name
-                                                    "
-                                                    label="Требуемый материал"
-                                                    readonly
-                                                    disabled
-                                                />
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field
-                                                    v-model="
-                                                        editedBillPosition
-                                                            .position.value
-                                                    "
-                                                    :label="editFormLabelValue"
-                                                    readonly
-                                                    disabled
-                                                />
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field
-                                                    v-model="
-                                                        editedBillPosition
-                                                            .position.date
-                                                    "
-                                                    label="Требуемая дата поставки"
-                                                    readonly
-                                                    disabled
-                                                />
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field
-                                                    v-model="
-                                                        editedBillPosition.value
-                                                    "
-                                                    label="Количество материла в счете"
-                                                    min="0"
-                                                    type="number"
-                                                    :max="
-                                                        editedBillPosition
-                                                            .position.value
-                                                    "
-                                                />
-                                            </v-col>
-                                            <v-col>
-                                                <v-menu
-                                                    v-model="
-                                                        dialogEditDateMenuShow
-                                                    "
-                                                    :close-on-content-click="
-                                                        false
-                                                    "
-                                                    :nudge-right="40"
-                                                    transition="scale-transition"
-                                                    offset-y
-                                                    min-width="auto"
-                                                >
-                                                    <template
-                                                        v-slot:activator="{
-                                                            on,
-                                                            attrs,
-                                                        }"
+                                        <v-card-text>
+                                            <v-container>
+                                                <v-row>
+                                                    <v-col
+                                                        cols="12"
+                                                        sm="6"
+                                                        md="4"
                                                     >
                                                         <v-text-field
                                                             v-model="
-                                                                editedBillPosition.date
+                                                                editedBillPosition
+                                                                    .position
+                                                                    .good.name
                                                             "
-                                                            label="Необходимая дата доставки"
+                                                            label="Материал (заявка)"
                                                             readonly
-                                                            v-bind="attrs"
-                                                            v-on="on"
                                                         />
-                                                    </template>
-                                                    <v-date-picker
-                                                        v-model="
-                                                            editedBillPosition.date
-                                                        "
-                                                        @input="
-                                                            dialogEditDateMenuShow = false
-                                                        "
-                                                        locale="ru-ru"
-                                                        :weekday-format="
-                                                            getCustomDay
-                                                        "
-                                                    />
-                                                </v-menu>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field
-                                                    v-model="
-                                                        editedBillPosition.price
-                                                    "
-                                                    min="0"
-                                                    type="number"
-                                                    label="Цена материла в счете"
-                                                />
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-card-text>
+                                                    </v-col>
+                                                    <v-col
+                                                        cols="12"
+                                                        sm="6"
+                                                        md="4"
+                                                    >
+                                                        <v-text-field
+                                                            v-model="
+                                                                editedBillPosition
+                                                                    .position
+                                                                    .value
+                                                            "
+                                                            :label="
+                                                                editFormLabelValue
+                                                            "
+                                                            readonly
+                                                        />
+                                                    </v-col>
+                                                    <v-col
+                                                        cols="12"
+                                                        sm="6"
+                                                        md="4"
+                                                    >
+                                                        <v-text-field
+                                                            v-model="
+                                                                editedBillPosition
+                                                                    .position
+                                                                    .date
+                                                            "
+                                                            label="Дата поставки (заявка)"
+                                                            readonly
+                                                        />
+                                                    </v-col>
+                                                    <v-col
+                                                        cols="12"
+                                                        sm="6"
+                                                        md="4"
+                                                    >
+                                                        <v-text-field
+                                                            v-model="
+                                                                editedBillPosition.value
+                                                            "
+                                                            label="Количество (счет)"
+                                                            min="0"
+                                                            type="number"
+                                                            :max="
+                                                                editedBillPosition
+                                                                    .position
+                                                                    .value
+                                                            "
+                                                        />
+                                                    </v-col>
+                                                    <v-col>
+                                                        <v-menu
+                                                            v-model="
+                                                                dialogEditDateMenuShow
+                                                            "
+                                                            :close-on-content-click="
+                                                                false
+                                                            "
+                                                            :nudge-right="40"
+                                                            transition="scale-transition"
+                                                            offset-y
+                                                            min-width="auto"
+                                                        >
+                                                            <template
+                                                                v-slot:activator="{
+                                                                    on,
+                                                                    attrs,
+                                                                }"
+                                                            >
+                                                                <v-text-field
+                                                                    v-model="
+                                                                        editedBillPosition.date
+                                                                    "
+                                                                    label="Дата доставки (счет)"
+                                                                    readonly
+                                                                    v-bind="
+                                                                        attrs
+                                                                    "
+                                                                    v-on="on"
+                                                                />
+                                                            </template>
+                                                            <v-date-picker
+                                                                v-model="
+                                                                    editedBillPosition.date
+                                                                "
+                                                                @input="
+                                                                    dialogEditDateMenuShow = false
+                                                                "
+                                                                locale="ru-ru"
+                                                                :weekday-format="
+                                                                    getCustomDay
+                                                                "
+                                                            />
+                                                        </v-menu>
+                                                    </v-col>
+                                                    <v-col
+                                                        cols="12"
+                                                        sm="6"
+                                                        md="4"
+                                                    >
+                                                        <v-text-field
+                                                            v-model="
+                                                                editedBillPosition.price
+                                                            "
+                                                            min="0"
+                                                            type="number"
+                                                            label="Цена материла (счет)"
+                                                        />
+                                                    </v-col>
+                                                </v-row>
+                                            </v-container>
+                                        </v-card-text>
 
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="save"
-                                    >
-                                        Сохранить
-                                    </v-btn>
-                                    <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="close"
-                                    >
-                                        Отмена
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                        <v-dialog v-model="dialogDelete" max-width="300px">
-                            <v-card>
-                                <v-card-title class="text-h5"
-                                    >Удалить?</v-card-title
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn
+                                                color="blue darken-1"
+                                                text
+                                                @click="save"
+                                            >
+                                                Сохранить
+                                            </v-btn>
+                                            <v-btn
+                                                color="blue darken-1"
+                                                text
+                                                @click="close"
+                                            >
+                                                Отмена
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                                <v-dialog
+                                    v-model="dialogDelete"
+                                    max-width="300px"
                                 >
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        outlined
-                                        @click="deleteItemConfirm"
-                                        >Да</v-btn
-                                    >
-                                    <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        outlined
-                                        @click="closeDelete"
-                                        >Отмена</v-btn
-                                    >
-                                    <v-spacer></v-spacer>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </template>
-                    <template #item.index="{ item }">
-                        <td>
-                            {{ billPositions.indexOf(item) + 1 }}
-                        </td>
-                    </template>
-                    <template v-slot:item.value="{ item }">
-                        <td
-                            :class="
-                                item.value === null ? 'red white--text' : ''
-                            "
+                                    <v-card>
+                                        <v-card-title class="text-h5"
+                                            >Удалить?</v-card-title
+                                        >
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn
+                                                color="blue darken-1"
+                                                text
+                                                outlined
+                                                @click="deleteItemConfirm"
+                                                >Да</v-btn
+                                            >
+                                            <v-btn
+                                                color="blue darken-1"
+                                                text
+                                                outlined
+                                                @click="closeDelete"
+                                                >Отмена</v-btn
+                                            >
+                                            <v-spacer></v-spacer>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                            </template>
+                            <template #item.index="{ item }">
+                                <td>
+                                    {{ billPositions.indexOf(item) + 1 }}
+                                </td>
+                            </template>
+                            <template v-slot:item.value="{ item }">
+                                <td
+                                    :class="
+                                        item.value === null
+                                            ? 'red white--text'
+                                            : ''
+                                    "
+                                >
+                                    {{
+                                        item.value === null
+                                            ? "Количество не заполнено"
+                                            : item.value
+                                    }}
+                                </td>
+                            </template>
+                            <template v-slot:item.date="{ item }">
+                                <td
+                                    :class="
+                                        item.date === null
+                                            ? 'red white--text'
+                                            : ''
+                                    "
+                                >
+                                    {{
+                                        item.date === null
+                                            ? "Дата не заполнена"
+                                            : item.date
+                                    }}
+                                </td>
+                            </template>
+                            <template v-slot:item.price="{ item }">
+                                <td
+                                    :class="
+                                        item.price === null
+                                            ? 'red white--text'
+                                            : ''
+                                    "
+                                >
+                                    {{
+                                        item.price === null
+                                            ? "Цена не заполнена"
+                                            : item.price
+                                    }}
+                                </td>
+                            </template>
+                            <template v-slot:item.actions="{ item }">
+                                <v-icon
+                                    small
+                                    class="mr-2"
+                                    @click="editItem(item)"
+                                >
+                                    mdi-pencil
+                                </v-icon>
+                                <v-icon small @click="deleteItem(item)">
+                                    mdi-delete
+                                </v-icon>
+                            </template>
+                        </v-data-table>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn
+                            color="success"
+                            :disabled="billPositions.length == 0"
                         >
-                            {{
-                                item.value === null
-                                    ? "Количество не заполнено"
-                                    : item.date
-                            }}
-                        </td>
-                    </template>
-                    <template v-slot:item.date="{ item }">
-                        <td
-                            :class="item.date === null ? 'red white--text' : ''"
+                            Создать счет
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-tab-item>
+
+            <v-tab-item :key="1">
+                <v-card class="pa-2" outlined>
+                    <v-card-title>
+                        <div class="text-h6 mb-3 font-weight-light">
+                            Распределенные позиции
+                        </div>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-text-field
+                            v-model="searchAttachedPositions"
+                            append-icon="mdi-magnify"
+                            label="Поиск"
+                            hide-details
+                            class="mb-4"
+                        />
+                        <v-data-table
+                            :headers="requestPositionsHeaders"
+                            dense
+                            hide-default-footer
+                            :items="attachedPositions"
+                            class="elevation-1 row-pointer"
+                            :search="searchAttachedPositions"
+                            item-key="id"
+                            :loading="!billLoaded"
                         >
-                            {{
-                                item.date === null
-                                    ? "Дата не заполнена"
-                                    : item.date
-                            }}
-                        </td>
-                    </template>
-                    <template v-slot:item.price="{ item }">
-                        <td
-                            :class="
-                                item.price === null ? 'red white--text' : ''
-                            "
-                        >
-                            {{
-                                item.price === null
-                                    ? "Цена не заполнена"
-                                    : item.price
-                            }}
-                        </td>
-                    </template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-icon small class="mr-2" @click="editItem(item)">
-                            mdi-pencil
-                        </v-icon>
-                        <v-icon small @click="deleteItem(item)">
-                            mdi-delete
-                        </v-icon>
-                    </template>
-                </v-data-table>
-            </v-card-text>
-            <v-card-actions>
-                <v-btn color="success" :disabled="billPositions.length == 0">
-                    Создать счет
-                </v-btn>
-            </v-card-actions>
-        </v-card>
+                            <template #item.index="{ item }">
+                                <td>
+                                    {{ attachedPositions.indexOf(item) + 1 }}
+                                </td>
+                            </template>
+                            <template v-slot:item.delivered="{ item }">
+                                <td>
+                                    <v-icon>
+                                        {{
+                                            item.delivered === true
+                                                ? "mdi-checkbox-marked-circle"
+                                                : "mdi-cancel"
+                                        }}
+                                    </v-icon>
+                                </td>
+                            </template>
+                        </v-data-table>
+                    </v-card-text>
+                </v-card>
+            </v-tab-item>
+        </v-tabs>
     </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
+    computed: {
+        ...mapGetters([
+            "getProjectById",
+            "getStatusById",
+            "getUserById",
+            "getCompanyById",
+            "getGoodById",
+        ]),
+        editFormLabelValue() {
+            if (this.editedBillPosition && this.editedBillPosition.position) {
+                return (
+                    "Требуемое количество, " +
+                    this.editedBillPosition.position.good.measure
+                );
+            }
+            return "";
+        },
+    },
     data: () => ({
+        tab: 0,
         billLoaded: false,
 
         searchAttachedPositions: "",
@@ -446,9 +534,9 @@ export default {
                             value: element.value,
                             date: element.date,
                         },
-                        date: null,
-                        value: null,
-                        price: null,
+                        date: element.date,
+                        value: element.value,
+                        price: 0.0,
                     }
                 );
                 this.billPositions.push(addintingItem);
@@ -511,17 +599,6 @@ export default {
             return daysOfWeek[i];
         },
     },
-    computed: {
-        editFormLabelValue() {
-            if (this.editedBillPosition && this.editedBillPosition.position) {
-                return (
-                    "Требуемое количество, " +
-                    this.editedBillPosition.position.good.measure
-                );
-            }
-            return "";
-        },
-    },
     watch: {
         dialog(val) {
             val || this.close();
@@ -530,47 +607,12 @@ export default {
             val || this.closeDelete();
         },
     },
-    async created() {
-        var id = this.$route.params.id;
-        console.log(id);
-        var response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/bill.json"
-        );
-        var bill = await response.json();
-
-        this.notAttachedPositions = bill.positions.filter(
-            (p) => p.billId === null
-        );
-        this.attachedPositions = bill.positions.filter(
-            (p) => p.billId !== null
-        );
-
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/companies.json"
-        );
-        this.companies = await response.json();
-
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/projects.json"
-        );
-        var projects = await response.json();
-        this.project = projects.find((p) => p.id == +bill.id);
-
-        response = await fetch(
-            "https://raw.githubusercontent.com/alexspel/builder/billcard/data/users/users.json"
-        );
-        var users = await response.json();
-        this.manager = users.find((p) => p.id == +this.project.author.id);
-        this.billLoaded = true;
+    created() {
+        Promise.all([
+            this.$store.dispatch("loadProjects"),
+        ]).then(() => {
+            this.project = this.getProjectById(this.$route.params.id);
+        });
     },
 };
 </script>
-
-<style lang="css" scoped>
-.row-pointer >>> tbody tr :hover {
-    cursor: pointer;
-}
-.link:hover {
-    text-color: blue;
-}
-</style>
